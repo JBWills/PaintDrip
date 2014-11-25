@@ -1,6 +1,7 @@
 package edu.cmsc434.paintdrip.paintdripprototype;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +13,12 @@ public class FeedActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        startActivity(new Intent(this, MapsActivity.class));
     }
 
 
