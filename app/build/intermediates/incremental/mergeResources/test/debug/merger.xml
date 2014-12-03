@@ -2,9 +2,9 @@
 <merger version="2" >
 
     <dataSet config="main" >
-        <source path="/Users/nadeem/AndroidStudioProjects/PaintDrip/app/src/androidTest/res" />
-        <source path="/Users/nadeem/AndroidStudioProjects/PaintDrip/app/build/generated/res/rs/test/debug" />
-        <source path="/Users/nadeem/AndroidStudioProjects/PaintDrip/app/build/generated/res/generated/test/debug" />
+        <source path="/home/evan/workspace/CMSC434/PaintDrip/app/src/androidTest/res" />
+        <source path="/home/evan/workspace/CMSC434/PaintDrip/app/build/generated/res/rs/test/debug" />
+        <source path="/home/evan/workspace/CMSC434/PaintDrip/app/build/generated/res/generated/test/debug" />
     </dataSet>
 
 </merger>

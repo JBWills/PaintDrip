@@ -2,6 +2,7 @@ package edu.cmsc434.paintdrip.paintdripprototype;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -9,18 +10,31 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import edu.cmsc434.paintdrip.paintdripprototype.Paint.Painting;
+import edu.cmsc434.paintdrip.paintdripprototype.Paint.Stroke;
 
 
 public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private LocationManager mLocationManager;
-   private LocationListener mLocListener;
+    private LocationListener mLocListener;
+
+    private Painting painting;
+    private List<Polyline> drawnPolylines;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,16 +42,16 @@ public class MapsActivity extends FragmentActivity {
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
 
+        painting = new Painting();
+        drawnPolylines = new LinkedList<Polyline>();
 
         mLocListener = new LocationListener() {
-            private final String TAG = "Raja";
+            private final String TAG = "LLEvent";
 
             public void onLocationChanged(Location l) {
-                //Intent locationAlert = new Intent("LOCATION_CHANGED")
-                 //       .putExtra("target_location", l);
-                //sendBroadcast(locationAlert);
-                // locationManager.requestLocationUpdates("gps", 0 ,0, this);
-                Log.e("Raja", "You moved to " + l);
+                Log.e(TAG, "You moved to " + l);
+                painting.addPointToStroke(new LatLng(l.getLatitude(), l.getLongitude()));
+                redrawPainting();
             }
 
             public void onProviderEnabled(String p) {
@@ -104,6 +118,24 @@ public class MapsActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+    }
+
+    private void redrawPainting() {
+        for (Polyline line : drawnPolylines) {
+            line.remove();
+        }
+        drawnPolylines.clear();
+
+        for (Stroke stroke : painting.getStrokes()) {
+            Polyline drawnLine = mMap.addPolyline(
+                    new PolylineOptions().addAll(stroke.path)
+                                         .width(stroke.style.thickness)
+                                         .color(stroke.style.color)
+                                         .visible(true)
+            );
+
+            drawnPolylines.add(drawnLine);
+        }
     }
 }
