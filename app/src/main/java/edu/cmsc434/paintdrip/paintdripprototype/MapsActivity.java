@@ -45,6 +45,8 @@ public class MapsActivity extends FragmentActivity {
         setUpMapIfNeeded();
         getActionBar().setTitle("Paint");
         mMap.getUiSettings().setZoomControlsEnabled(false);
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
         painting = new Painting();
         drawnPolylines = new LinkedList<Polyline>();
