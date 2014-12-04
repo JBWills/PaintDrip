@@ -1,16 +1,22 @@
 package edu.cmsc434.paintdrip.paintdripprototype;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,6 +31,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import afzkl.development.colorpickerview.dialog.ColorPickerDialog;
 import edu.cmsc434.paintdrip.paintdripprototype.Paint.Painting;
 import edu.cmsc434.paintdrip.paintdripprototype.Paint.Stroke;
 
@@ -37,6 +44,52 @@ public class MapsActivity extends FragmentActivity {
 
     private Painting painting;
     private List<Polyline> drawnPolylines;
+    private boolean isPainting = true;
+
+    public void onShowColorPickerClicked(View view) {
+        //The color picker menu item as been clicked. Show
+        //a dialog using the custom ColorPickerDialog class.
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int initialValue = prefs.getInt("color_2", 0xFF000000);
+
+        System.out.println("INITIAL COLOR: " + initialValue);
+
+        Log.d("mColorPicker", "initial value:" + initialValue);
+
+        final ColorPickerDialog colorDialog = new ColorPickerDialog(this, initialValue);
+
+        colorDialog.setAlphaSliderVisible(true);
+        colorDialog.setTitle("Pick a Color!");
+
+        colorDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(MapsActivity.this, "Selected Color: " + colorToHexString(colorDialog.getColor()), Toast.LENGTH_LONG).show();
+
+                //Save the value in our preferences.
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt("color_2", colorDialog.getColor());
+                editor.commit();
+                painting.setColor(colorDialog.getColor());
+            }
+        });
+
+        colorDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Nothing to do here.
+            }
+        });
+
+        colorDialog.show();
+    }
+
+    private String colorToHexString(int color) {
+        return String.format("#%06X", 0xFFFFFFFF & color);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +100,8 @@ public class MapsActivity extends FragmentActivity {
         mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        ToggleButton toggle = (ToggleButton)findViewById(R.id.button);
+        toggle.setChecked(true);
 
         painting = new Painting();
         drawnPolylines = new LinkedList<Polyline>();
@@ -56,7 +111,8 @@ public class MapsActivity extends FragmentActivity {
 
             public void onLocationChanged(Location l) {
                 Log.e(TAG, "You moved to " + l);
-                painting.addPointToStroke(new LatLng(l.getLatitude(), l.getLongitude()));
+                if (isPainting)
+                    painting.addPointToStroke(new LatLng(l.getLatitude(), l.getLongitude()));
                 redrawPainting();
             }
 
@@ -149,6 +205,16 @@ public class MapsActivity extends FragmentActivity {
             );
 
             drawnPolylines.add(drawnLine);
+        }
+    }
+
+    public void onPaintToggleClicked(View view) {
+        if (isPainting) {
+            painting.endStroke();
+            isPainting = false;
+        }
+        else {
+            isPainting = true;
         }
     }
 }
