@@ -1,10 +1,18 @@
 package edu.cmsc434.paintdrip.paintdripprototype;
 
+import afzkl.development.colorpickerview.dialog.ColorPickerDialog;
+
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 
 public class FeedActivity extends Activity {
@@ -20,7 +28,6 @@ public class FeedActivity extends Activity {
         super.onResume();
         startActivity(new Intent(this, MapsActivity.class));
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
