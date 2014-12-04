@@ -1,6 +1,99 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:id="@+id/map"
-    tools:context="edu.cmsc434.paintdrip.paintdripprototype.MapsActivity"
-    android:name="com.google.android.gms.maps.SupportMapFragment" />
-<!-- From: file:/home/evan/workspace/CMSC434/PaintDrip/app/src/main/res/layout/activity_maps.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="vertical">
+
+    <!--
+<FrameLayout
+    android:id="@+id/content_primary"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1" >
+
+
+</FrameLayout>
+
+<FrameLayout
+    android:id="@+id/content_secondary"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1">
+</FrameLayout>
+!-->
+
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sliding_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        sothree:panelHeight="20dp"
+        sothree:shadowHeight="4dp">
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+            android:layout_height="match_parent" android:id="@+id/map"
+            tools:context="edu.cmsc434.paintdrip.paintdripprototype.MapsActivity"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
+
+        <!--
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center|top"
+            android:text="The Awesome Sliding Up Panel"
+            android:textSize="16sp" />
+            -->
+
+        <!--
+        <FrameLayout
+            android:id="@+id/content_secondary"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_weight="1">
+
+
+        </FrameLayout>
+        -->
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <Button android:id="@+id/button"
+                android:background="#ff1077aa"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="bottom"
+                />
+
+            <Button android:id="@+id/button2"
+                android:background="#ffaa2200"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="bottom"
+                />
+            <Button android:id="@+id/button3"
+                android:background="#ff1598aa"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="bottom"
+                />
+
+
+        </LinearLayout>
+
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+
+</LinearLayout>
+
+
+<!-- From: file:/Users/nadeem/AndroidStudioProjects/PaintDrip/app/src/main/res/layout/activity_maps.xml -->
