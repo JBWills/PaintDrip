@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -43,7 +44,7 @@ public class MapsActivity extends FragmentActivity {
 
     private Painting painting;
     private List<Polyline> drawnPolylines;
-
+    private boolean isPainting = true;
 
     public void onShowColorPickerClicked(View view) {
         //The color picker menu item as been clicked. Show
@@ -71,6 +72,7 @@ public class MapsActivity extends FragmentActivity {
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putInt("color_2", colorDialog.getColor());
                 editor.commit();
+                painting.setColor(colorDialog.getColor());
             }
         });
 
@@ -96,6 +98,8 @@ public class MapsActivity extends FragmentActivity {
         setUpMapIfNeeded();
         getActionBar().setTitle("Paint");
         mMap.getUiSettings().setZoomControlsEnabled(false);
+        ToggleButton toggle = (ToggleButton)findViewById(R.id.button);
+        toggle.setChecked(true);
 
         painting = new Painting();
         drawnPolylines = new LinkedList<Polyline>();
@@ -105,7 +109,8 @@ public class MapsActivity extends FragmentActivity {
 
             public void onLocationChanged(Location l) {
                 Log.e(TAG, "You moved to " + l);
-                painting.addPointToStroke(new LatLng(l.getLatitude(), l.getLongitude()));
+                if (isPainting)
+                    painting.addPointToStroke(new LatLng(l.getLatitude(), l.getLongitude()));
                 redrawPainting();
             }
 
@@ -198,6 +203,16 @@ public class MapsActivity extends FragmentActivity {
             );
 
             drawnPolylines.add(drawnLine);
+        }
+    }
+
+    public void onPaintToggleClicked(View view) {
+        if (isPainting) {
+            painting.endStroke();
+            isPainting = false;
+        }
+        else {
+            isPainting = true;
         }
     }
 }
