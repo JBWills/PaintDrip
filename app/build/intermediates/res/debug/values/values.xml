@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
 
-    <!-- From: file:/home/evan/workspace/CMSC434/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/common_colors.xml -->
+    <!-- From: file:/C:/Users/Evan/AndroidStudioProjects/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/common_colors.xml -->
     <eat-comment />
 
     <color name="common_action_bar_splitter">#d2d2d2</color>
@@ -14,7 +14,7 @@
     <color name="common_signin_btn_light_text_disabled">#FFAAAAAA</color>
     <color name="common_signin_btn_light_text_focused">#FF737373</color>
     <color name="common_signin_btn_light_text_pressed">@android:color/white</color>
-    <!-- From: file:/home/evan/workspace/CMSC434/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/wallet_colors.xml -->
+    <!-- From: file:/C:/Users/Evan/AndroidStudioProjects/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/wallet_colors.xml -->
     <eat-comment />
 
     <color name="wallet_bright_foreground_disabled_holo_light">#ffb2b2b2</color>
@@ -30,7 +30,7 @@
     <color name="wallet_hint_foreground_holo_light">#808080</color>
     <color name="wallet_holo_blue_light">#ff33b5e5</color>
     <color name="wallet_link_text_light">#0000ee</color>
-    <!-- From: file:/home/evan/workspace/CMSC434/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/admob_ads_attrs.xml -->
+    <!-- From: file:/C:/Users/Evan/AndroidStudioProjects/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/admob_ads_attrs.xml -->
     <eat-comment />
 
     <declare-styleable name="AdsAttrs">
@@ -52,7 +52,7 @@
         <!-- The ad unit ID. -->
         <attr name="adUnitId" format="string" />
     </declare-styleable>
-    <!-- From: file:/home/evan/workspace/CMSC434/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/maps_attrs.xml -->
+    <!-- From: file:/C:/Users/Evan/AndroidStudioProjects/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/maps_attrs.xml -->
     <eat-comment />
 
     <declare-styleable name="MapAttrs">
@@ -77,7 +77,7 @@
         <attr name="useViewLifecycle" format="boolean" />
         <attr name="zOrderOnTop" format="boolean" />
     </declare-styleable>
-    <!-- From: file:/home/evan/workspace/CMSC434/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/wallet_attrs.xml -->
+    <!-- From: file:/C:/Users/Evan/AndroidStudioProjects/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/wallet_attrs.xml -->
     <eat-comment />
 
     <declare-styleable name="WalletFragmentOptions">
@@ -151,25 +151,26 @@
             <enum name="monochrome" value="2" />
         </attr>
     </declare-styleable>
-    <!-- From: file:/home/evan/workspace/CMSC434/PaintDrip/app/src/main/res/values/dimens.xml -->
+    <!-- From: file:/C:/Users/Evan/AndroidStudioProjects/PaintDrip/app/src/main/res/values/dimens.xml -->
     <eat-comment />
 
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <!-- From: file:/home/evan/workspace/CMSC434/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/version.xml -->
+    <!-- From: file:/C:/Users/Evan/AndroidStudioProjects/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/version.xml -->
     <eat-comment />
 
     <integer name="google_play_services_version">6171000</integer>
-    <!-- From: file:/home/evan/workspace/CMSC434/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/admob_strings.xml -->
+    <!-- From: file:/C:/Users/Evan/AndroidStudioProjects/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/admob_strings.xml -->
     <eat-comment />
 
     <string name="accept">Accept</string>
-    <!-- From: file:/home/evan/workspace/CMSC434/PaintDrip/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/C:/Users/Evan/AndroidStudioProjects/PaintDrip/app/src/main/res/values/strings.xml -->
     <eat-comment />
 
+    <string name="action_save">Save</string>
     <string name="action_settings">Settings</string>
     <string name="app_name">PaintDripPrototype</string>
-    <!-- From: file:/home/evan/workspace/CMSC434/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/common_strings.xml -->
+    <!-- From: file:/C:/Users/Evan/AndroidStudioProjects/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/common_strings.xml -->
     <eat-comment />
 
     <string name="common_android_wear_notification_needs_update_text">An application requires an update to the Android Wear app.</string>
@@ -178,7 +179,7 @@
     <string name="common_google_play_services_enable_button" msgid="2523291102206661146">Enable Google Play services</string>
     <string name="common_google_play_services_enable_text" msgid="227660514972886228">This app won\'t work unless you enable Google Play services.</string>
     <string name="common_google_play_services_enable_title" msgid="5122002158466380389">Enable Google Play services</string>
-    <string name="common_google_play_services_error_notification_requested_by_msg">Requested by <ns1:g id="app_name">%1$s</ns1:g></string>
+    <string name="common_google_play_services_error_notification_requested_by_msg">Requested by  <ns1:g id="app_name">%1$s</ns1:g></string>
     <string name="common_google_play_services_install_button" msgid="7153882981874058840">Get Google Play services</string>
     <string name="common_google_play_services_install_text_phone" msgid="2122112764540849864">This app won\'t run without Google Play services, which are missing from your phone.</string>
     <string name="common_google_play_services_install_text_tablet" msgid="7351599665250191022">This app won\'t run without Google Play services, which are missing from your tablet.</string>
@@ -200,13 +201,13 @@
     <string name="common_open_on_phone">Open on phone</string>
     <string name="common_signin_button_text">Sign in</string>
     <string name="common_signin_button_text_long">Sign in with Google</string>
-    <!-- From: file:/home/evan/workspace/CMSC434/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/admob_strings.xml -->
+    <!-- From: file:/C:/Users/Evan/AndroidStudioProjects/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/admob_strings.xml -->
     <eat-comment />
 
     <string name="create_calendar_message">Allow Ad to create a calendar event?</string>
     <string name="create_calendar_title">Create calendar event</string>
     <string name="decline">Decline</string>
-    <!-- From: file:/home/evan/workspace/CMSC434/PaintDrip/app/src/debug/res/values/google_maps_api.xml -->
+    <!-- From: file:/C:/Users/Evan/AndroidStudioProjects/PaintDrip/app/src/debug/res/values/google_maps_api.xml -->
     <eat-comment />
 
     <string name="google_maps_key" templateMergeStrategy="preserve">AIzaSyApm8apfuBhWg8GgjR4BR-UzgQcNuqK0d4</string>
@@ -225,30 +226,30 @@ https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend
     string in this file.
         -->
     </string>
-    <!-- From: file:/home/evan/workspace/CMSC434/PaintDrip/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/C:/Users/Evan/AndroidStudioProjects/PaintDrip/app/src/main/res/values/strings.xml -->
     <eat-comment />
 
     <string name="hello_world">Hello world!</string>
-    <!-- From: file:/home/evan/workspace/CMSC434/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/admob_strings.xml -->
+    <!-- From: file:/C:/Users/Evan/AndroidStudioProjects/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/admob_strings.xml -->
     <eat-comment />
 
     <string name="store_picture_message">"Allow Ad to store image in Picture gallery?"</string>
     <string name="store_picture_title">Save image</string>
-    <!-- From: file:/home/evan/workspace/CMSC434/PaintDrip/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/C:/Users/Evan/AndroidStudioProjects/PaintDrip/app/src/main/res/values/strings.xml -->
     <eat-comment />
 
     <string name="title_activity_maps">Map</string>
-    <!-- From: file:/home/evan/workspace/CMSC434/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/wallet_strings.xml -->
+    <!-- From: file:/C:/Users/Evan/AndroidStudioProjects/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/wallet_strings.xml -->
     <eat-comment />
 
     <string name="wallet_buy_button_place_holder" translation_description="Text on a button that allows a user to make a payment with Google Wallet [CHAR LIMIT=30]">Buy with Google</string>
-    <!-- From: file:/home/evan/workspace/CMSC434/PaintDrip/app/src/main/res/values/styles.xml -->
+    <!-- From: file:/C:/Users/Evan/AndroidStudioProjects/PaintDrip/app/src/main/res/values/styles.xml -->
     <eat-comment />
 
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <!-- Customize your theme here. -->
     </style>
-    <!-- From: file:/home/evan/workspace/CMSC434/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/admob_iap_style.xml -->
+    <!-- From: file:/C:/Users/Evan/AndroidStudioProjects/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/admob_iap_style.xml -->
     <eat-comment />
 
     <style name="Theme.IAPTheme" parent="android:Theme">
@@ -259,7 +260,7 @@ https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend
         <item name="android:windowIsFloating">true</item>
         <item name="android:backgroundDimEnabled">false</item>
     </style>
-    <!-- From: file:/home/evan/workspace/CMSC434/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/wallet_styles.xml -->
+    <!-- From: file:/C:/Users/Evan/AndroidStudioProjects/PaintDrip/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/res/values/wallet_styles.xml -->
     <eat-comment />
 
     <style name="WalletFragmentDefaultButtonTextAppearance">
