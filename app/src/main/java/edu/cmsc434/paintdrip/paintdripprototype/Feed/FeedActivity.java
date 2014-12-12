@@ -1,7 +1,9 @@
 package edu.cmsc434.paintdrip.paintdripprototype.Feed;
 
+import edu.cmsc434.paintdrip.paintdripprototype.MapsActivity;
 import edu.cmsc434.paintdrip.paintdripprototype.R;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -40,7 +42,6 @@ public class FeedActivity extends FragmentActivity implements PaintingListFragme
     @Override
     public void onResume(){
         super.onResume();
-        //startActivity(new Intent(this, MapsActivity.class));
     }
 
     @Override
@@ -56,8 +57,8 @@ public class FeedActivity extends FragmentActivity implements PaintingListFragme
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_paint) {
+            startActivity(new Intent(this, MapsActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

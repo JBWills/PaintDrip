@@ -13,6 +13,7 @@
     <string name="tab_title_friends">Friends</string>
     <string name="tab_title_global">Global</string>
     <string name="tab_title_me">Me</string>
+    <string name="action_paint">Paint</string>
 
 
 </resources>
