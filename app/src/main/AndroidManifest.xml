@@ -36,7 +36,8 @@
 
         <activity
             android:name="edu.cmsc434.paintdrip.paintdripprototype.MapsActivity"
-            android:label="@string/title_activity_maps" >
+            android:label="@string/title_activity_maps"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 </manifest>
