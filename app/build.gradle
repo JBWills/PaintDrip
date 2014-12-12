@@ -13,7 +13,7 @@ android {
     }
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -28,4 +28,5 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.0'
     compile 'com.sothree.slidinguppanel:library:+'
     compile project(':colorPickerView')
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 }

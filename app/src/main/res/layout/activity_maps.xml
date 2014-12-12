@@ -3,20 +3,6 @@
     android:layout_height="match_parent"
     android:baselineAligned="false"
     android:orientation="vertical">
-    <!--
-    <FrameLayout
-    android:id="@+id/content_primary"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_weight="1" >
-    </FrameLayout>
-    <FrameLayout
-    android:id="@+id/content_secondary"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_weight="1">
-    </FrameLayout>
-    !-->
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
         xmlns:sothree="http://schemas.android.com/apk/res-auto"
         android:id="@+id/sliding_layout"
@@ -34,22 +20,6 @@
             android:id="@+id/map"
             tools:context="edu.cmsc434.paintdrip.paintdripprototype.MapsActivity"
             android:name="com.google.android.gms.maps.SupportMapFragment" />
-        <!--
-        <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center|top"
-        android:text="The Awesome Sliding Up Panel"
-        android:textSize="16sp" />
-        -->
-        <!--
-        <FrameLayout
-        android:id="@+id/content_secondary"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_weight="1">
-        </FrameLayout>
-        -->
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"

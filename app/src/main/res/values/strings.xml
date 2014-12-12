@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">PaintDripPrototype</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">PaintDrip</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_maps">Map</string>
+
+    <!-- Map Strings -->
+    <string name="title_activity_maps">Paint</string>
     <string name="action_save">Save</string>
+
+    <!-- Feed Strings -->
+    <string name="title_activity_feed">PaintDrip</string>
+    <string name="tab_title_friends">Friends</string>
+    <string name="tab_title_global">Global</string>
+    <string name="tab_title_me">Me</string>
+
 
 </resources>
