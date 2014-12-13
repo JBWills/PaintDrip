@@ -28,4 +28,9 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.0'
     compile 'com.sothree.slidinguppanel:library:+'
     compile project(':colorPickerView')
+    compile 'com.parse.bolts:bolts-android:1.1.2'
+    provided fileTree(dir: 'libs', include: 'Parse-*.jar')
+    compile project(':facebook')
+    compile 'com.parse.bolts:bolts-android:1.1.4'
+    compile files('libs/Parse-1.8.0/Parse-1.8.0.jar')
 }
