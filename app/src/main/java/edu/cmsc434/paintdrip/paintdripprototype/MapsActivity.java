@@ -2,9 +2,7 @@ package edu.cmsc434.paintdrip.paintdripprototype;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,21 +16,17 @@ import android.view.View;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import afzkl.development.colorpickerview.dialog.ColorPickerDialog;
-import edu.cmsc434.paintdrip.paintdripprototype.Paint.Painting;
+import edu.cmsc434.paintdrip.paintdripprototype.Paint.PaintingPath;
 import edu.cmsc434.paintdrip.paintdripprototype.Paint.Stroke;
 
 
@@ -42,9 +36,9 @@ public class MapsActivity extends FragmentActivity {
     private LocationManager mLocationManager;
     private LocationListener mLocListener;
 
-    private Painting painting;
+    private PaintingPath PaintingPathPath;
     private List<Polyline> drawnPolylines;
-    private boolean isPainting = true;
+    private boolean isPaintingPath = true;
 
     public void onShowColorPickerClicked(View view) {
         //The color picker menu item as been clicked. Show
@@ -72,7 +66,7 @@ public class MapsActivity extends FragmentActivity {
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putInt("color_2", colorDialog.getColor());
                 editor.commit();
-                painting.setColor(colorDialog.getColor());
+                PaintingPathPath.setColor(colorDialog.getColor());
             }
         });
 
@@ -100,10 +94,12 @@ public class MapsActivity extends FragmentActivity {
         mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getMyLocation();
+
         ToggleButton toggle = (ToggleButton)findViewById(R.id.button);
         toggle.setChecked(true);
 
-        painting = new Painting();
+        PaintingPathPath = new PaintingPath();
         drawnPolylines = new LinkedList<Polyline>();
 
         mLocListener = new LocationListener() {
@@ -111,9 +107,9 @@ public class MapsActivity extends FragmentActivity {
 
             public void onLocationChanged(Location l) {
                 Log.e(TAG, "You moved to " + l);
-                if (isPainting)
-                    painting.addPointToStroke(new LatLng(l.getLatitude(), l.getLongitude()));
-                redrawPainting();
+                if (isPaintingPath)
+                    PaintingPathPath.addPointToStroke(new LatLng(l.getLatitude(), l.getLongitude()));
+                redrawPaintingPath();
             }
 
             public void onProviderEnabled(String p) {
@@ -149,6 +145,7 @@ public class MapsActivity extends FragmentActivity {
         super.onResume();
         setUpMapIfNeeded();
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, mLocListener);
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, mLocListener);
     }
 
@@ -190,13 +187,13 @@ public class MapsActivity extends FragmentActivity {
         //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
     }
 
-    private void redrawPainting() {
+    private void redrawPaintingPath() {
         for (Polyline line : drawnPolylines) {
             line.remove();
         }
         drawnPolylines.clear();
 
-        for (Stroke stroke : painting.getStrokes()) {
+        for (Stroke stroke : PaintingPathPath.getStrokes()) {
             Polyline drawnLine = mMap.addPolyline(
                     new PolylineOptions().addAll(stroke.path)
                                          .width(stroke.style.thickness)
@@ -209,12 +206,12 @@ public class MapsActivity extends FragmentActivity {
     }
 
     public void onPaintToggleClicked(View view) {
-        if (isPainting) {
-            painting.endStroke();
-            isPainting = false;
+        if (isPaintingPath) {
+            PaintingPathPath.endStroke();
+            isPaintingPath = false;
         }
         else {
-            isPainting = true;
+            isPaintingPath = true;
         }
     }
 }

@@ -33,4 +33,5 @@ dependencies {
     compile project(':facebook')
     compile 'com.parse.bolts:bolts-android:1.1.4'
     compile files('libs/Parse-1.8.0/Parse-1.8.0.jar')
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 }

@@ -15,11 +15,11 @@ import java.util.List;
 /**
  * Created by evan on 12/1/14.
  */
-public class Painting extends ParseObject {
+public class PaintingPath  {
     private List<Stroke> strokes;
     private Stroke currentStroke;
 
-    public Painting() {
+    public PaintingPath() {
         strokes = new LinkedList<Stroke>();
         currentStroke = new Stroke();
     }
@@ -56,36 +56,5 @@ public class Painting extends ParseObject {
         currentStroke.style.color = color;
     }
 
-    /* Parse Methods */
-    public String getTitle() {
-        return getString("title");
-    }
 
-    public void setTitle(String title) {
-        put("title", title);
-    }
-
-    public ParseUser getAuthor() {
-        return getParseUser("author");
-    }
-
-    public void setAuthor(ParseUser user) {
-        put("author", user);
-    }
-
-    public String getRating() {
-        return getString("rating");
-    }
-
-    public void setRating(String rating) {
-        put("rating", rating);
-    }
-
-    public ParseFile getPhotoFile() {
-        return getParseFile("photo");
-    }
-
-    public void setPhotoFile(ParseFile file) {
-        put("photo", file);
-    }
 }
