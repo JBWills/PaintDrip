@@ -2,6 +2,7 @@ package edu.cmsc434.paintdrip.paintdripprototype.Feed;
 
 import edu.cmsc434.paintdrip.paintdripprototype.MapsActivity;
 import edu.cmsc434.paintdrip.paintdripprototype.R;
+import edu.cmsc434.paintdrip.paintdripprototype.Share.ShareActivity;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -36,6 +37,8 @@ public class FeedActivity extends FragmentActivity implements PaintingListFragme
         tabs.setAllCaps(true);
         tabs.setShouldExpand(true);
         tabs.setViewPager(pager);
+
+        //startActivity(new Intent(this, ShareActivity.class));
 
     }
 

@@ -15,5 +15,9 @@
     <string name="tab_title_me">Me</string>
     <string name="action_paint">Paint</string>
 
+    <!-- Share Strings -->
+    <string name="facebook_app_id">566658406811131</string>
+    <string name="title_activity_share">ShareActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>
