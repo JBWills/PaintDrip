@@ -1,12 +1,20 @@
 package edu.cmsc434.paintdrip.paintdripprototype;
 
+import android.graphics.Bitmap;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class ShareActivity extends FragmentActivity {
 
@@ -61,5 +69,47 @@ public class ShareActivity extends FragmentActivity {
      */
     private void setUpMap() {
         mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+    }
+
+    public void onShareButtonClicked(View view) {
+        GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback()
+        {
+            @Override
+            public void onSnapshotReady(Bitmap snapshot)
+            {
+                // TODO Auto-generated method stub
+                Bitmap bitmap = snapshot;
+
+                String filePath = "/mnt/sdcard/" + "MyMapScreen" +System.currentTimeMillis() + ".jpeg";
+
+                try
+                {
+                    FileOutputStream fout = new FileOutputStream("/mnt/sdcard/"
+                            + "MyMapScreen" + System.currentTimeMillis()
+                            + ".png");
+
+                    // Write the string to the file
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fout);
+                    fout.flush();
+                    fout.close();
+                }
+                catch (FileNotFoundException e)
+                {
+                    // TODO Auto-generated catch block
+                    Log.d("ImageCapture", "FileNotFoundException");
+                    Log.d("ImageCapture", e.getMessage());
+                    filePath = "";
+                }
+                catch (IOException e)
+                {
+                    // TODO Auto-generated catch block
+                    Log.d("ImageCapture", "IOException");
+                    Log.d("ImageCapture", e.getMessage());
+                    filePath = "";
+                }
+            }
+        };
+
+        mMap.snapshot(callback);
     }
 }

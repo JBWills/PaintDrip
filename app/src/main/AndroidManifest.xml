@@ -18,7 +18,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="edu.cmsc434.paintdrip.paintdripprototype.Feed.FeedActivity"
+            android:name=".Feed.FeedActivity"
             android:label="@string/title_activity_feed" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,9 +35,14 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name="edu.cmsc434.paintdrip.paintdripprototype.MapsActivity"
+            android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".ShareActivity"
+            android:label="@string/title_activity_share" >
         </activity>
     </application>
+
 </manifest>
