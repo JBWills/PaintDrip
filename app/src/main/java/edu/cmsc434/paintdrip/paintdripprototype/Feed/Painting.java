@@ -2,25 +2,40 @@ package edu.cmsc434.paintdrip.paintdripprototype.Feed;
 
 import android.graphics.Bitmap;
 
+import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
-/**
- * Created by jamesbwills on 12/11/14.
- */
+import java.util.ArrayList;
+import java.util.List;
+
+@ParseClassName("Painting")
 public class Painting extends ParseObject {
 
-    private String username;
-    private String description;
-    private int likes;
-    private Bitmap image;
+    public String username;
+    public String description;
+    public int likes;
+    public Bitmap image;
 
+    public Painting() {
+        // default constructor (required for Parse)
+    }
+
+    // Dummy constructor - used to upload a dummy painting
     public Painting(String username, String description, int likes, Bitmap image) {
         this.username = username;
         this.description = description;
         this.likes = likes;
         this.image = image;
+    }
+
+    public Painting(String authorId, String username, String description, int numLikes, ParseFile imgFile) {
+        setUsername(username);
+        setDescription(description);
+        setLikesCount(numLikes);
+        setPhotoFile(imgFile);
+        setAuthorId(authorId);
     }
 
     public Bitmap getImage() {
@@ -36,9 +51,41 @@ public class Painting extends ParseObject {
         return getInt("likesCount");
     }
 
+    public void setLikesCount(int likes) {
+        put("likesCount", likes);
+    }
+
+    //
     public void likePhoto() {
+        ParseUser user = ParseUser.getCurrentUser();
+
+        List<String> likedPaintings = user.getList("likedPaintings");
+        if(likedPaintings == null) {
+            likedPaintings = new ArrayList<String>();
+        }
+        likedPaintings.add(this.getObjectId());
+
+        user.put("likedPaintings", likedPaintings);
+        user.saveInBackground();
+
         int likesCount = getInt("likesCount");
         put("likesCount", ++likesCount);
+    }
+
+    public void setAuthorId(String authorId) {
+        put("authorId", authorId);
+    }
+
+    public String getAuthorId() {
+        return getString("authorId");
+    }
+
+    public void setUsername(String username) {
+        put("username", username);
+    }
+
+    public String getUsername() {
+        return getString("username");
     }
 
     public String getDescription() {
@@ -46,7 +93,7 @@ public class Painting extends ParseObject {
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        put("description", description);
     }
 
     public String getTitle() {
@@ -57,12 +104,20 @@ public class Painting extends ParseObject {
         put("title", title);
     }
 
-    public ParseUser getAuthor() {
-        return getParseUser("author");
-    }
+    public boolean isLiked() {
+        ParseUser user = ParseUser.getCurrentUser();
 
-    public void setAuthor(ParseUser user) {
-        put("author", user);
+        List<ParseObject> likedPaintings = user.getList("likedPaintings");
+        if(likedPaintings == null) {
+            return false;
+        }
+
+        // this makes checking for all likes O(n^2)... to be improved
+        if(likedPaintings.contains(this.getObjectId())) {
+            return true;
+        }else {
+            return false;
+        }
     }
 
     public String getRating(String rating) {
@@ -80,6 +135,4 @@ public class Painting extends ParseObject {
     public void setPhotoFile(ParseFile file) {
         put("photo", file);
     }
-
-
 }
