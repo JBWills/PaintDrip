@@ -14,6 +14,7 @@
     <string name="tab_title_global">Global</string>
     <string name="tab_title_me">Me</string>
     <string name="action_paint">Paint</string>
+    <string name="likes_text">Likes</string>
 
 
 </resources>

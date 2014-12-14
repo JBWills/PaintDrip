@@ -1,11 +1,42 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+    <style name="AppTheme" parent="android:Theme.Holo.Light">
         <!-- Customize your theme here. -->
         <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@color/dark_gray</item>
+        <item name="android:colorBackground">@color/dark_gray</item>
+        <item name="android:colorBackgroundCacheHint">@color/dark_gray</item>
+        <item name="android:cacheColorHint">@color/dark_gray</item>
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
     </style>
 
+    <!-- ActionBar styles -->
+    <style name="MyActionBar"
+           parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/blue</item>
+        <item name="android:icon">@android:color/transparent</item>
+        <item name="android:height">50dp</item>
+        <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
 
+    </style>
+
+    <!-- ActionBar title text -->
+    <style name="MyActionBarTitleText"
+           parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">30dp</item>
+    </style>
+
+    <style name="SelectedTabBarText">
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="DeselectedTabBarText">
+        <item name="android:textColor">@color/transparent_blue</item>
+        <item name="android:textStyle"></item>
+    </style>
 
 </resources>

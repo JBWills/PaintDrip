@@ -7,36 +7,52 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
+import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
 
 
-public class FeedActivity extends FragmentActivity implements PaintingListFragment.OnFragmentInteractionListener {
+public class FeedActivity extends FragmentActivity implements
+        PaintingListFragment.OnFragmentInteractionListener {
+
+    private PagerSlidingTabStrip mPageTabs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed);
 
-        Context context = getApplicationContext();
-
         // Initialize the ViewPager and set an adapter
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        final ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+        pager.setOnPageChangeListener(new SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                Log.i("JB", "PageSelected");
+                for(int i = 0; i < pager.getChildCount(); i++){
+                    TextView tabText = (TextView) pager.getChildAt(i);
+                    if (i == position) {
+                        tabText.setTextAppearance(getApplicationContext(), R.style.SelectedTabBarText);
+                    } else {
+                        tabText.setTextAppearance(getApplicationContext(), R.style.DeselectedTabBarText);
+                    }
+                }
+            }
+        });
 
         // Bind the tabs to the ViewPager
-        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        tabs.setAllCaps(true);
-        tabs.setShouldExpand(true);
-        tabs.setViewPager(pager);
-
+        mPageTabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        mPageTabs.setAllCaps(true);
+        mPageTabs.setShouldExpand(true);
+        mPageTabs.setViewPager(pager);
+        mPageTabs.setIndicatorColorResource(R.color.transparent_blue);
     }
 
     @Override
