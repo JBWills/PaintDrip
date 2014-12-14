@@ -6,8 +6,7 @@
         <item name="android:windowActionBarOverlay">false</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowBackground">@color/dark_gray</item>
-        <item name="android:colorBackground">@color/dark_gray</item>
-        <item name="android:colorBackgroundCacheHint">@color/dark_gray</item>
+        <item name="android:colorBackground">@color/white</item>
         <item name="android:cacheColorHint">@color/dark_gray</item>
         <item name="android:actionBarStyle">@style/MyActionBar</item>
     </style>
@@ -35,7 +34,7 @@
     </style>
 
     <style name="DeselectedTabBarText">
-        <item name="android:textColor">@color/transparent_blue</item>
+        <item name="android:textColor">@color/less_transparent_blue</item>
         <item name="android:textStyle"></item>
     </style>
 

@@ -4,6 +4,8 @@ import edu.cmsc434.paintdrip.paintdripprototype.MapsActivity;
 import edu.cmsc434.paintdrip.paintdripprototype.R;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
@@ -30,22 +33,9 @@ public class FeedActivity extends FragmentActivity implements
         setContentView(R.layout.activity_feed);
 
         // Initialize the ViewPager and set an adapter
-        final ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
-        pager.setOnPageChangeListener(new SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                Log.i("JB", "PageSelected");
-                for(int i = 0; i < pager.getChildCount(); i++){
-                    TextView tabText = (TextView) pager.getChildAt(i);
-                    if (i == position) {
-                        tabText.setTextAppearance(getApplicationContext(), R.style.SelectedTabBarText);
-                    } else {
-                        tabText.setTextAppearance(getApplicationContext(), R.style.DeselectedTabBarText);
-                    }
-                }
-            }
-        });
+        pager.setCurrentItem(0);
 
         // Bind the tabs to the ViewPager
         mPageTabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
@@ -53,6 +43,34 @@ public class FeedActivity extends FragmentActivity implements
         mPageTabs.setShouldExpand(true);
         mPageTabs.setViewPager(pager);
         mPageTabs.setIndicatorColorResource(R.color.transparent_blue);
+        mPageTabs.setOnPageChangeListener(new SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                updateTabs(position);
+            }
+        });
+
+        updateTabs(0);
+
+        int actionBarTitle = Resources.getSystem().getIdentifier("action_bar_title", "id", "android");
+        TextView actionBarTitleView = (TextView) getWindow().findViewById(actionBarTitle);
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/GrandHotel-Regular.otf");
+        if(actionBarTitleView != null){
+            actionBarTitleView.setTypeface(font);
+        }
+    }
+
+    private void updateTabs(int position) {
+        LinearLayout tabsLayout = ((LinearLayout)mPageTabs.getChildAt(0));
+        for(int i = 0; i < tabsLayout.getChildCount(); i++){
+
+            TextView tabText = (TextView) tabsLayout.getChildAt(i);
+            if (i == position) {
+                tabText.setTextAppearance(getApplicationContext(), R.style.SelectedTabBarText);
+            } else {
+                tabText.setTextAppearance(getApplicationContext(), R.style.DeselectedTabBarText);
+            }
+        }
     }
 
     @Override
