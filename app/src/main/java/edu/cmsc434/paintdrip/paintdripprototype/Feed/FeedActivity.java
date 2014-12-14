@@ -2,6 +2,7 @@ package edu.cmsc434.paintdrip.paintdripprototype.Feed;
 
 import edu.cmsc434.paintdrip.paintdripprototype.MapsActivity;
 import edu.cmsc434.paintdrip.paintdripprototype.R;
+import edu.cmsc434.paintdrip.paintdripprototype.Share.ShareActivity;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -62,8 +63,7 @@ public class FeedActivity extends FragmentActivity implements
 
     private void updateTabs(int position) {
         LinearLayout tabsLayout = ((LinearLayout)mPageTabs.getChildAt(0));
-        for(int i = 0; i < tabsLayout.getChildCount(); i++){
-
+        for(int i = 0; i < tabsLayout.getChildCount(); i++) {
             TextView tabText = (TextView) tabsLayout.getChildAt(i);
             if (i == position) {
                 tabText.setTextAppearance(getApplicationContext(), R.style.SelectedTabBarText);
