@@ -35,6 +35,7 @@ import java.util.List;
 import afzkl.development.colorpickerview.dialog.ColorPickerDialog;
 import edu.cmsc434.paintdrip.paintdripprototype.Paint.Painting;
 import edu.cmsc434.paintdrip.paintdripprototype.Paint.Stroke;
+import edu.cmsc434.paintdrip.paintdripprototype.Share.ShareActivity;
 
 
 public class MapsActivity extends FragmentActivity {

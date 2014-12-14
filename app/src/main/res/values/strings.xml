@@ -9,11 +9,16 @@
     <string name="action_save">Save</string>
 
     <!-- Feed Strings -->
-    <string name="title_activity_feed">PaintDrip</string>
+    <string name="title_activity_feed">Paintdrip</string>
     <string name="tab_title_friends">Friends</string>
     <string name="tab_title_global">Global</string>
     <string name="tab_title_me">Me</string>
     <string name="action_paint">Paint</string>
-    <string name="title_activity_share">Share</string>
+    <string name="likes_text">Likes</string>
+
+    <!-- Share Strings -->
+    <string name="facebook_app_id">566658406811131</string>
+    <string name="title_activity_share">ShareActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

@@ -30,4 +30,5 @@ dependencies {
     compile 'com.sothree.slidinguppanel:library:+'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile 'com.android.support:appcompat-v7:21.0.3'
+    compile project(':facebook')
 }
