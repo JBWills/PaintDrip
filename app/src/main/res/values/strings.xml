@@ -18,7 +18,7 @@
 
     <!-- Share Strings -->
     <string name="facebook_app_id">566658406811131</string>
-    <string name="title_activity_share">ShareActivity</string>
+    <string name="title_activity_share">Share</string>
     <string name="hello_world">Hello world!</string>
 
 </resources>
