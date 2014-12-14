@@ -25,11 +25,6 @@ import edu.cmsc434.paintdrip.paintdripprototype.Feed.Painting;
  * Created by nadeem on 12/12/14.
  */
 
-// getHomeFeed(String userId) returns a list of Paintings
-// likePainting(String userId, String paintingId)
-// boolean isPaintingLiked(String userId, String paintingId)
-
-
 public class ParseManager {
     Context context;
 
@@ -46,7 +41,6 @@ public class ParseManager {
             saveImage(p, p.image);
         }
     }
-
 
     public void saveImage(final Painting painting, Bitmap img) {
         ParseUser currentUser = ParseUser.getCurrentUser();
@@ -75,24 +69,12 @@ public class ParseManager {
         List<ParseObject> list = user.getList("paintings");
         if(list != null) {
             list.add(parseUploadedPainting);
-            System.out.println("ADDED TO LIST for user: " + ParseUser.getCurrentUser().getUsername());
         }else {
             list = new ArrayList<ParseObject>();
             list.add(parseUploadedPainting);
-            System.out.println("NEW LIST for user: " + ParseUser.getCurrentUser().getUsername());
         }
 
         user.put("paintings", list);
-        user.saveInBackground(new SaveCallback() {
-
-            public void done(ParseException e) {
-                if (e != null) {
-                    System.out.println("error saving User data! :" + e.getMessage());
-                } else {
-                    /* saved */
-                    System.out.println("User data saved!");
-                }
-            }
-        });
+        user.saveInBackground();
     }
 }

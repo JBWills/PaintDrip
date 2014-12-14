@@ -24,9 +24,6 @@ import java.util.List;
 
 import edu.cmsc434.paintdrip.paintdripprototype.R;
 
-/**
- * Created by jamesbwills on 12/12/14.
- */
 public class PaintingListAdapter extends ParseQueryAdapter<Painting>  {
     private static final int FRIENDS_FRAGMENT = 0;
     private static final int GLOBAL_FRAGMENT = 1;
@@ -38,7 +35,6 @@ public class PaintingListAdapter extends ParseQueryAdapter<Painting>  {
     static class ViewHolder {
         public TextView username;
         public TextView likes;
-        //public ImageView image;
         public ParseImageView image;
     }
 
@@ -46,11 +42,8 @@ public class PaintingListAdapter extends ParseQueryAdapter<Painting>  {
 
         super(context, new ParseQueryAdapter.QueryFactory<Painting>() {
             public ParseQuery<Painting> create() {
-                // Here we can configure a ParseQuery to display
-                // only top-rated meals.
                 ParseQuery query = new ParseQuery("Painting");
-                //query.whereContainedIn("rating", Arrays.asList("5", "4"));
-                //query.orderByDescending("rating");
+
                 return query;
             }
         });
@@ -63,8 +56,6 @@ public class PaintingListAdapter extends ParseQueryAdapter<Painting>  {
 
         super(context, new ParseQueryAdapter.QueryFactory<Painting>() {
             public ParseQuery<Painting> create() {
-                // Here we can configure a ParseQuery to display
-                // only top-rated meals.
                 ParseQuery query = new ParseQuery("Painting");
 
                 if(feedID == ME_FRAGMENT) {
@@ -81,33 +72,6 @@ public class PaintingListAdapter extends ParseQueryAdapter<Painting>  {
         mItems = new ArrayList<Painting>();
         mContext = context;
     }
-
-    /*
-    @Override
-    public int getCount() {
-        return mItems.size();
-    }
-
-    @Override
-    public Painting getItem(int position) {
-        return mItems.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public void addItem(Painting painting) {
-        mItems.add(painting);
-    }
-
-    public void setList(List<Painting> paintings) {
-        mItems.clear();
-        for (Painting f : paintings) {
-            mItems.add(f);
-        }
-    }*/
 
     // Customize the layout by overriding getItemView
     @Override

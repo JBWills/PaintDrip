@@ -22,14 +22,6 @@ public class Painting extends ParseObject {
         // default constructor (required for Parse)
     }
 
-    // Dummy constructor - used to upload a dummy painting
-    public Painting(String username, String description, int likes, Bitmap image) {
-        this.username = username;
-        this.description = description;
-        this.likes = likes;
-        this.image = image;
-    }
-
     public Painting(String authorId, String username, String description, int numLikes, ParseFile imgFile) {
         setUsername(username);
         setDescription(description);
@@ -38,15 +30,25 @@ public class Painting extends ParseObject {
         setAuthorId(authorId);
     }
 
-    public Bitmap getImage() {
-        return image;
-    }
-
-    public void setImage(Bitmap image) {
+    // Dummy constructor - used to upload a dummy painting
+    public Painting(String username, String description, int likes, Bitmap image) {
+        this.username = username;
+        this.description = description;
+        this.likes = likes;
         this.image = image;
     }
 
-    /* Parse Methods */
+    // ---------------------
+    // Dummy methods - used for dummy paintings
+    // ---------------------
+    public Bitmap getImage() {
+        return image;
+    }
+    public void setImage(Bitmap image) {
+        this.image = image;
+    }
+    // ---------------------
+
     public int getLikesCount() {
         return getInt("likesCount");
     }
@@ -55,8 +57,8 @@ public class Painting extends ParseObject {
         put("likesCount", likes);
     }
 
-    //
-    public void likePhoto() {
+    // add this painting to the users list of likedPaintings and increment like count
+    public void likePainting() {
         ParseUser user = ParseUser.getCurrentUser();
 
         List<String> likedPaintings = user.getList("likedPaintings");
@@ -70,6 +72,23 @@ public class Painting extends ParseObject {
 
         int likesCount = getInt("likesCount");
         put("likesCount", ++likesCount);
+    }
+
+    // remove this painting from the users list of likedPaintings and decrement like count
+    public void unlikePainting() {
+        ParseUser user = ParseUser.getCurrentUser();
+
+        List<String> likedPaintings = user.getList("likedPaintings");
+        if(likedPaintings == null) {
+            return;
+        }
+        likedPaintings.remove(this.getObjectId());
+
+        user.put("likedPaintings", likedPaintings);
+        user.saveInBackground();
+
+        int likesCount = getInt("likesCount");
+        put("likesCount", --likesCount);
     }
 
     public void setAuthorId(String authorId) {
@@ -118,14 +137,6 @@ public class Painting extends ParseObject {
         }else {
             return false;
         }
-    }
-
-    public String getRating(String rating) {
-        return getString("rating");
-    }
-
-    public void setRating(String rating) {
-        put("rating", rating);
     }
 
     public ParseFile getPhotoFile() {
