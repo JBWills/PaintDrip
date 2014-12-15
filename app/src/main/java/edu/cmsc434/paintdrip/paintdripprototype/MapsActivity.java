@@ -459,6 +459,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
     public void paintingOn() {
         if (!isPainting) {
+            painting.setColor(getSelectedColor());
             isPainting = true;
         }
     }
