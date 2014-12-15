@@ -24,10 +24,11 @@ dependencies {
         mavenCentral()
     }
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.google.android.gms:play-services:6.1.71'
-    compile 'com.android.support:support-v4:21.0.0'
-    compile 'com.sothree.slidinguppanel:library:+'
     compile project(':colorPickerView')
+    compile 'com.google.android.gms:play-services:6.1.71'
+    compile 'com.android.support:support-v4:21.+'
+    compile 'com.sothree.slidinguppanel:library:+'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+    compile 'com.android.support:appcompat-v7:21.+'
     compile project(':facebook')
 }

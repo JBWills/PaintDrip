@@ -8,17 +8,17 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     tools:context="edu.cmsc434.paintdrip.paintdripprototype.Share.ShareActivity">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
         android:orientation="vertical" >
 
-        <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
-        </ImageView>
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools" android:layout_width="wrap_content"
+            android:layout_height="300dp" android:id="@+id/map"
+            tools:context="edu.cmsc434.paintdrip.paintdripprototype.Share.ShareActivity"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
 
         <TextView
             android:id="@+id/artist"
@@ -80,6 +80,4 @@
             android:text="Publish to Feed" >
         </Button>
     </LinearLayout>
-
-
 </LinearLayout>

@@ -3,6 +3,7 @@ package edu.cmsc434.paintdrip.paintdripprototype.Share;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,11 +13,16 @@ import android.widget.Button;
 import com.facebook.AppEventsLogger;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.FacebookDialog;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import edu.cmsc434.paintdrip.paintdripprototype.R;
 
-public class ShareActivity extends Activity {
+public class ShareActivity extends FragmentActivity {
 
+    private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private UiLifecycleHelper uiHelper;
     private Button fbShareButton;
 
@@ -35,9 +41,11 @@ public class ShareActivity extends Activity {
 
         uiHelper = new UiLifecycleHelper(this, null);
         uiHelper.onCreate(savedInstanceState);
+        setUpMapIfNeeded();
     }
 
     private void initiateFbShare() {
+        // TODO Auto-generated method stub
         FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(this)
                 .setLink("https://developers.facebook.com/android")
                 .setPicture(
@@ -65,13 +73,12 @@ public class ShareActivity extends Activity {
                 });
     }
 
-
-
     @Override
     protected void onResume(){
         super.onResume();
         AppEventsLogger.activateApp(this);
         uiHelper.onResume();
+        setUpMapIfNeeded();
     }
 
     @Override
@@ -80,7 +87,6 @@ public class ShareActivity extends Activity {
         AppEventsLogger.deactivateApp(this);
         uiHelper.onPause();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -102,5 +108,43 @@ public class ShareActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
+     * installed) and the map has not already been instantiated.. This will ensure that we only ever
+     * call {@link #setUpMap()} once when {@link #mMap} is not null.
+     * <p/>
+     * If it isn't installed {@link com.google.android.gms.maps.SupportMapFragment} (and
+     * {@link com.google.android.gms.maps.MapView MapView}) will show a prompt for the user to
+     * install/update the Google Play services APK on their device.
+     * <p/>
+     * A user can return to this FragmentActivity after following the prompt and correctly
+     * installing/updating/enabling the Google Play services. Since the FragmentActivity may not
+     * have been completely destroyed during this process (it is likely that it would only be
+     * stopped or paused), {@link #onCreate(Bundle)} may not be called again so we should call this
+     * method in {@link #onResume()} to guarantee that it will be called.
+     */
+    private void setUpMapIfNeeded() {
+        // Do a null check to confirm that we have not already instantiated the map.
+        if (mMap == null) {
+            // Try to obtain the map from the SupportMapFragment.
+            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+                    .getMap();
+            // Check if we were successful in obtaining the map.
+            if (mMap != null) {
+                setUpMap();
+            }
+        }
+    }
+
+    /**
+     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
+     * just add a marker near Africa.
+     * <p/>
+     * This should only be called once and when we are sure that {@link #mMap} is not null.
+     */
+    private void setUpMap() {
+        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
     }
 }
