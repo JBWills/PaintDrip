@@ -1,6 +1,7 @@
 package edu.cmsc434.paintdrip.paintdripprototype.Feed;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,15 +36,6 @@ public class PaintingListAdapter extends ParseQueryAdapter<Painting>  {
     private static final int ME_FRAGMENT = 2;
     List<Painting> mItems;
     Context mContext;
-
-    static class ViewHolder {
-        public TextView username;
-        public TextView likes;
-        public ImageView heartImage;
-        public ImageView heartImage2;
-        public TextView description;
-        public ParseImageView image;
-    }
 
     public PaintingListAdapter(Context context) {
 
@@ -63,11 +56,11 @@ public class PaintingListAdapter extends ParseQueryAdapter<Painting>  {
         super(context, new ParseQueryAdapter.QueryFactory<Painting>() {
             public ParseQuery<Painting> create() {
                 ParseQuery query = new ParseQuery("Painting");
-                if(feedID == ME_FRAGMENT) {
+                if (feedID == ME_FRAGMENT) {
                     query.whereEqualTo("authorId", ParseUser.getCurrentUser().getObjectId());
                     query.orderByDescending("createdAt");
                     return query;
-                }else {
+                } else {
                     query.orderByDescending("createdAt");
                     return query;
                 }
@@ -80,49 +73,49 @@ public class PaintingListAdapter extends ParseQueryAdapter<Painting>  {
 
     // Customize the layout by overriding getItemView
     @Override
-    public View getItemView(Painting painting, View rowView, ViewGroup parent) {
-        // reuse views
-        if (rowView == null) {
-            Log.i("JB", "Creating View");
-            LayoutInflater inflater = LayoutInflater.from(mContext);
-            rowView = inflater.inflate(R.layout.feed_item, parent, false);
-            final ViewHolder viewHolder = new ViewHolder();
-            View.OnClickListener likesClickedListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.i("JB", "Clicked likes");
-                    animateLike(viewHolder.heartImage2);
+    public View getItemView(final Painting painting, View rowView, ViewGroup parent) {
+
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        rowView = inflater.inflate(R.layout.feed_item, parent, false);
+        final View row = rowView;
+        View.OnClickListener likesClickedListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("JB", "Clicked likes");
+                togglePaintingLike(painting, row);
+            }
+        };
+        ImageView heartImage = (ImageView) rowView.findViewById(R.id.heart_image);
+        heartImage.setOnClickListener(likesClickedListener);
+
+        TextView likesView = (TextView) rowView.findViewById(R.id.likes_text);
+        likesView.setOnClickListener(likesClickedListener);
+
+        TextView username = (TextView) rowView.findViewById(R.id.username_view);
+
+        TextView description = (TextView) rowView.findViewById(R.id.description_view);
+
+        ImageView heartImage2 = (ImageView) rowView.findViewById(R.id.heart_in_painting);
+        heartImage2.setVisibility(View.INVISIBLE);
+        heartImage2.clearAnimation();
+
+        ImageView paintingImage = (ParseImageView) rowView.findViewById(R.id.painting_image);
+        paintingImage.setOnClickListener(new View.OnClickListener() {
+            boolean clicked = false;
+            long lastClickedTime = -1;
+            @Override
+            public void onClick(View v) {
+                // User double-clicked the view
+                long time = System.currentTimeMillis();
+                if (clicked && time - lastClickedTime < 300) {
+                    clicked = false;
+                    togglePaintingLike(painting, row);
+                } else {
+                    clicked = true;
+                    lastClickedTime = time;
                 }
-            };
-            viewHolder.heartImage = (ImageView) rowView.findViewById(R.id.heart_image);
-            viewHolder.heartImage.setOnClickListener(likesClickedListener);
-            viewHolder.likes = (TextView) rowView.findViewById(R.id.likes_text);
-            viewHolder.likes.setOnClickListener(likesClickedListener);
-            viewHolder.username = (TextView) rowView.findViewById(R.id.username_view);
-            viewHolder.description = (TextView) rowView.findViewById(R.id.description_view);
-            viewHolder.heartImage2 = (ImageView) rowView.findViewById(R.id.heart_in_painting);
-            viewHolder.heartImage2.setVisibility(View.INVISIBLE);
-            viewHolder.heartImage2.clearAnimation();
-            viewHolder.image = (ParseImageView) rowView.findViewById(R.id.painting_image);
-            viewHolder.image.setOnClickListener(new View.OnClickListener() {
-                boolean clicked = false;
-                long lastClickedTime = -1;
-                @Override
-                public void onClick(View v) {
-                    // User double-clicked the view
-                    long time = System.currentTimeMillis();
-                    if (clicked && time - lastClickedTime < 300) {
-                        clicked = false;
-                        animateLike(viewHolder.heartImage2);
-                    } else {
-                        clicked = true;
-                        lastClickedTime = time;
-                    }
-                }
-            });
-            rowView.setTag(viewHolder);
-        }
-        ViewHolder holder = (ViewHolder) rowView.getTag();
+            }
+        });
 
         // Add and download the image
         ParseFile imageFile = painting.getPhotoFile();
@@ -134,11 +127,39 @@ public class PaintingListAdapter extends ParseQueryAdapter<Painting>  {
             System.out.println("");
         }
 
-        holder.username.setText(painting.getUsername());
-        holder.likes.setText(painting.getLikesCount() + " ");
+        if (painting.isLiked()) {
+            heartImage.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.heart_selected));
+        } else {
+            heartImage.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.heart_deselected));
+        }
+
+        username.setText(painting.getUsername());
+        likesView.setText(painting.getLikesCount() + " ");
         //holder.image.setImageBitmap(painting.getImage());
-        holder.description.setText(painting.getDescription());
+        description.setText(painting.getDescription());
+
         return rowView;
+    }
+
+    private void togglePaintingLike(final Painting p, final View rowView) {
+        ImageView heartView1 = (ImageView) rowView.findViewById(R.id.heart_image);
+        final TextView likesView = (TextView) rowView.findViewById(R.id.likes_text);
+        if (p.isLiked()) {
+            p.unlikePainting();
+            heartView1.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.heart_deselected));
+        } else {
+            ImageView heartView2 = (ImageView) rowView.findViewById(R.id.heart_in_painting);
+            p.likePainting();
+            animateLike(heartView2);
+            heartView1.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.heart_selected));
+        }
+
+        p.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                likesView.setText(p.getLikesCount() + "");
+            }
+        });
     }
 
     private void animateLike(ImageView heart) {

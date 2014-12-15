@@ -81,13 +81,13 @@ public class FeedActivity extends FragmentActivity implements
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == 0) {
+        /*if(requestCode == 0) {
             if(ParseUser.getCurrentUser() != null) {
                 Context context = getApplicationContext();
                 ParseManager parseManager = new ParseManager(context);
                 parseManager.uploadDummyImages();
             }
-        }
+        }*/
     }
 
     @Override
