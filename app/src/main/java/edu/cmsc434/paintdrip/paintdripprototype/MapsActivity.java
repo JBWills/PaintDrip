@@ -19,6 +19,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -86,6 +88,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
+
         map.setMyLocationEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(false);
         map.getUiSettings().setMyLocationButtonEnabled(true);
@@ -106,6 +109,12 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.paint, menu);
+        if (isSaving) {
+            menu.findItem(R.id.action_save).setVisible(false);
+        }
+        else {
+            menu.findItem(R.id.action_save).setVisible(true);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -134,6 +143,8 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             SlidingUpPanelLayout slider = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout_save);
             slider.setSlidingEnabled(true);
             slider.collapsePanel();
+            map.setMyLocationEnabled(true);
+            invalidateOptionsMenu();
             isSaving = false;
         }
         else {
@@ -209,15 +220,61 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
         @Override
         public void onPanelCollapsed(View view) {
+            if (isPainting) {
+                ImageView toolSignifer = (ImageView)findViewById(R.id.tool_signifier);
+                Resources r = getResources();
+                float distance = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, -100, r.getDisplayMetrics());
+                Animation moveIn = new TranslateAnimation(distance, 0, 0, 0);
+                moveIn.setDuration(500);
+
+                switch (selectedTool) {
+                    case PAINTBRUSH:
+                        toolSignifer.setImageResource(R.drawable.paintbrush_tool_right);
+                        toolSignifer.startAnimation(moveIn);
+                        toolSignifer.invalidate();
+                        break;
+                    case PEN:
+                        toolSignifer.setImageResource(R.drawable.pen_tool_right);
+                        toolSignifer.startAnimation(moveIn);
+                        toolSignifer.invalidate();
+                        break;
+                    case PENCIL:
+                        toolSignifer.setImageResource(R.drawable.pencil_tool_right);
+                        toolSignifer.startAnimation(moveIn);
+                        toolSignifer.invalidate();
+                        break;
+                }
+                toolSignifer.setVisibility(View.VISIBLE);
+
+                View strokeSignifer = findViewById(R.id.drawer_stroke);
+                Animation fadeIn = new AlphaAnimation(0, 1);
+                fadeIn.setDuration(150);
+                strokeSignifer.startAnimation(fadeIn);
+                strokeSignifer.setVisibility(View.VISIBLE);
+            }
         }
 
         @Override
         public void onPanelExpanded(View view) {
+            if (isPainting) {
+                ImageView toolSignifer = (ImageView)findViewById(R.id.tool_signifier);
+                Resources r = getResources();
+                float distance = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, -100, r.getDisplayMetrics());
+                Animation moveOut = new TranslateAnimation(0, distance, 0, 0);
+                moveOut.setDuration(250);
+                toolSignifer.startAnimation(moveOut);
+                toolSignifer.setVisibility(View.INVISIBLE);
+
+                View strokeSignifer = findViewById(R.id.drawer_stroke);
+                Animation fadeOut = new AlphaAnimation(1, 0);
+                fadeOut.setDuration(150);
+                strokeSignifer.startAnimation(fadeOut);
+                findViewById(R.id.drawer_stroke).setVisibility(View.INVISIBLE);
+            }
         }
 
         @Override
         public void onPanelAnchored(View view) {
-
         }
 
         @Override
@@ -266,6 +323,8 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             SlidingUpPanelLayout slider = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout_save);
             slider.setSlidingEnabled(true);
             slider.expandPanel();
+            map.setMyLocationEnabled(false);
+            invalidateOptionsMenu();
             isSaving = true;
         }
         return super.onOptionsItemSelected(item);
@@ -450,6 +509,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                 editor.commit();
                 painting.setColor(colorDialog.getColor());
                 findViewById(R.id.drawer_inkwell).invalidate();
+                findViewById(R.id.drawer_stroke).invalidate();
             }
         });
 

@@ -38,6 +38,28 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentTop="true"
             />
+        <ImageView
+            android:id="@+id/tool_signifier"
+            android:src="@drawable/pencil_tool_right"
+            android:visibility="invisible"
+            android:layout_width="100dip"
+            android:layout_height="50dip"
+            android:layout_marginLeft="-2dip"
+            android:padding="1dp"
+            android:scaleType="fitCenter"
+            android:layout_gravity="top|left"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"/>
+        <edu.cmsc434.paintdrip.paintdripprototype.Paint.StrokeSignifer
+            android:id="@+id/drawer_stroke"
+            android:visibility="invisible"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="23dip"
+            android:layout_marginTop="22.5dip"
+            android:layout_gravity="top|right"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"/>
         <ImageButton android:id="@+id/drawer_eraser"
             android:src="@drawable/eraser_tool"
             android:background="@null"
@@ -94,7 +116,8 @@
             android:layout_toRightOf="@id/drawer_paintbrush"
             android:onClick="onPenClicked"
             />
-        <edu.cmsc434.paintdrip.paintdripprototype.Paint.InkwellButton android:id="@+id/drawer_inkwell"
+        <edu.cmsc434.paintdrip.paintdripprototype.Paint.InkwellButton
+            android:id="@+id/drawer_inkwell"
             android:background="@drawable/inkwell"
             android:layout_width="100dip"
             android:layout_height="100dip"
