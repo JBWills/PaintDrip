@@ -44,6 +44,10 @@ public class FeedActivity extends FragmentActivity implements
         mPageTabs.setShouldExpand(true);
         mPageTabs.setViewPager(pager);
         mPageTabs.setIndicatorColorResource(R.color.transparent_blue);
+        mPageTabs.setIndicatorHeight(15);
+        mPageTabs.setUnderlineHeight(2);
+        mPageTabs.setDividerColorResource(R.color.white);
+        mPageTabs.setTextSize(40);
         mPageTabs.setOnPageChangeListener(new SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
