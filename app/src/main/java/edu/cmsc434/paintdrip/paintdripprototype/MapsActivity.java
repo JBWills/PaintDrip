@@ -1,25 +1,38 @@
 package edu.cmsc434.paintdrip.paintdripprototype;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -29,6 +42,8 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,59 +53,52 @@ import edu.cmsc434.paintdrip.paintdripprototype.Paint.Stroke;
 import edu.cmsc434.paintdrip.paintdripprototype.Share.ShareActivity;
 
 
-public class MapsActivity extends FragmentActivity {
+public class MapsActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener  {
     private final int DEFAULT_ZOOM_LEVEL = 18;
 
     private GoogleMap map; // Might be null if Google Play services APK is not available.
-    private LocationManager locationManager;
-    private LocationListener locationListener;
+    private GoogleApiClient googleApiClient;
+    private FusedLocationProviderApi fusedLocationProviderApi = LocationServices.FusedLocationApi;
 
     private Painting painting;
     private List<Polyline> drawnPolylines;
-    private boolean isPainting = true;
+    private boolean isPainting = false;
+
+    private Tool selectedTool = Tool.NONE;
+    private boolean isSaving = false;
+
+    private enum Tool {
+        ERASER, PENCIL, PAINTBRUSH, PEN, NONE
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        googleApiClient = new GoogleApiClient.Builder(getBaseContext())
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+
+        if (googleApiClient != null) {
+            googleApiClient.connect();
+        }
+
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
-        getActionBar().setTitle("Paint");
-        map.getUiSettings().setZoomControlsEnabled(false);
         map.setMyLocationEnabled(true);
+        map.getUiSettings().setZoomControlsEnabled(false);
         map.getUiSettings().setMyLocationButtonEnabled(true);
-        map.getMyLocation();
 
         SlidingUpPanelLayout slider = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout);
         slider.setPanelSlideListener(new StyleSlideListener());
 
-        ToggleButton toggle = (ToggleButton)findViewById(R.id.button);
-        toggle.setChecked(true);
+        SlidingUpPanelLayout saveSlider = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout_save);
+        saveSlider.setPanelSlideListener(new SaveSlideListener());
 
         painting = new Painting();
+        painting.setColor(getSelectedColor());
         drawnPolylines = new LinkedList<Polyline>();
-
-        locationListener = new LocationListener() {
-            private final String TAG = "LLEvent";
-
-            public void onLocationChanged(Location l) {
-                Log.e(TAG, "You moved to " + l);
-                if (isPainting)
-                    painting.addPointToStroke(new LatLng(l.getLatitude(), l.getLongitude()));
-                redrawPainting();
-            }
-
-            public void onProviderEnabled(String p) {
-                Log.i(TAG, "Provider enabled");
-            }
-
-            public void onProviderDisabled(String p) {
-                Log.i(TAG, "Provider disabled");
-            }
-
-            public void onStatusChanged(String p, int status, Bundle extras) {
-                Log.i(TAG, "Status changed");
-            }
-        };
     }
 
     @Override
@@ -103,17 +111,34 @@ public class MapsActivity extends FragmentActivity {
 
     @Override
     protected void onPause() {
-        locationManager.removeUpdates(locationListener);
+        if (googleApiClient.isConnected()) {
+            fusedLocationProviderApi.removeLocationUpdates(googleApiClient, this);
+        }
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
         setUpMapIfNeeded();
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
+        if (googleApiClient.isConnected()) {
+            LocationRequest locationRequest = LocationRequest.create();
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            fusedLocationProviderApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+        }
+    }
+
+    public void onBackPressed() {
+        if (isSaving) {
+            SlidingUpPanelLayout slider = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout_save);
+            slider.setSlidingEnabled(true);
+            slider.collapsePanel();
+            isSaving = false;
+        }
+        else {
+            super.onBackPressed();
+        }
     }
 
     /**
@@ -163,14 +188,7 @@ public class MapsActivity extends FragmentActivity {
         if (location != null)
         {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                    new LatLng(location.getLatitude(), location.getLongitude()), 13));
-
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
-                    .zoom(DEFAULT_ZOOM_LEVEL)   // Sets the zoom
-                    .build();                   // Creates a CameraPosition from the builder
-            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
+                    new LatLng(location.getLatitude(), location.getLongitude()), DEFAULT_ZOOM_LEVEL));
         }
     }
     //endregion
@@ -208,6 +226,33 @@ public class MapsActivity extends FragmentActivity {
         }
     }
 
+    private class SaveSlideListener implements SlidingUpPanelLayout.PanelSlideListener {
+        @Override
+        public void onPanelSlide(View view, float v) {
+        }
+
+        @Override
+        public void onPanelCollapsed(View view) {
+        }
+
+        @Override
+        public void onPanelExpanded(View view) {
+            SlidingUpPanelLayout slider = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout_save);
+            slider.setSlidingEnabled(false);
+        }
+
+        @Override
+        public void onPanelAnchored(View view) {
+            SlidingUpPanelLayout slider = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout_save);
+            slider.setSlidingEnabled(false);
+        }
+
+        @Override
+        public void onPanelHidden(View view) {
+
+        }
+    }
+
     //endregion
     //region Event Functions
 
@@ -218,19 +263,143 @@ public class MapsActivity extends FragmentActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_save) {
-            startActivity(new Intent(this, ShareActivity.class));
+            SlidingUpPanelLayout slider = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout_save);
+            slider.setSlidingEnabled(true);
+            slider.expandPanel();
+            isSaving = true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onFrameConfirm(View view) {
+        map.snapshot(new GoogleMap.SnapshotReadyCallback() {
+            @Override
+            public void onSnapshotReady(Bitmap bitmap) {
+                Bitmap croppedPainting = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getWidth());
+                FileOutputStream out = null;
+                try {
+                    out = openFileOutput("currentPainting.png", Context.MODE_PRIVATE);
+                    croppedPainting.compress(Bitmap.CompressFormat.PNG, 100, out);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (out != null) {
+                            out.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                startActivity(new Intent(MapsActivity.this, ShareActivity.class));
+            }
+        });
     }
     //endregion
 
     //region Painting Functions
-    public void onPaintToggleClicked(View view) {
+    public void onEraserClicked(View view) {
+        if (selectedTool != Tool.ERASER) {
+            minimizeTool(getViewFromTool(selectedTool));
+            selectedTool = Tool.ERASER;
+            maximizeTool(view);
+            paintingOff();
+        }
+        else {
+            selectedTool = Tool.NONE;
+            minimizeTool(view);
+            paintingOff();
+        }
+    }
+
+    public void onPencilClicked(View view) {
+        if (selectedTool != Tool.PENCIL) {
+            minimizeTool(getViewFromTool(selectedTool));
+            selectedTool = Tool.PENCIL;
+            maximizeTool(view);
+            paintingOn();
+        }
+        else {
+            selectedTool = Tool.NONE;
+            minimizeTool(view);
+            paintingOff();
+        }
+    }
+
+    public void onPaintbrushClicked(View view) {
+        if (selectedTool != Tool.PAINTBRUSH) {
+            minimizeTool(getViewFromTool(selectedTool));
+            selectedTool = Tool.PAINTBRUSH;
+            maximizeTool(view);
+            paintingOn();
+        }
+        else {
+            selectedTool = Tool.NONE;
+            minimizeTool(view);
+            paintingOff();
+        }
+    }
+
+    public void onPenClicked(View view) {
+        if (selectedTool != Tool.PEN) {
+            minimizeTool(getViewFromTool(selectedTool));
+            selectedTool = Tool.PEN;
+            maximizeTool(view);
+            paintingOn();
+        }
+        else {
+            minimizeTool(view);
+            selectedTool = Tool.NONE;
+            paintingOff();
+        }
+    }
+
+    private View getViewFromTool(Tool tool) {
+        switch (tool){
+            case ERASER:
+                return findViewById(R.id.drawer_eraser);
+            case PENCIL:
+                return findViewById(R.id.drawer_pencil);
+            case PAINTBRUSH:
+                return findViewById(R.id.drawer_paintbrush);
+            case PEN:
+                return findViewById(R.id.drawer_pen);
+            default:
+                return null;
+        }
+    }
+
+    private void minimizeTool(View tool){
+        if (tool != null) {
+            Resources r = getResources();
+            float offset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, -30, r.getDisplayMetrics());
+            TranslateAnimation anim = new TranslateAnimation(0, 0, offset, 0);
+            anim.setDuration(250);
+            anim.setFillAfter(true);
+            tool.startAnimation(anim);
+        }
+    }
+
+    private void maximizeTool(View tool){
+                if (tool != null) {
+                    Resources r = getResources();
+                    float offset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, -30, r.getDisplayMetrics());
+                    TranslateAnimation anim = new TranslateAnimation(0, 0, 0, offset);
+                    anim.setDuration(250);
+            anim.setFillAfter(true);
+            tool.startAnimation(anim);
+        }
+    }
+
+    public void paintingOff() {
         if (isPainting) {
             painting.endStroke();
             isPainting = false;
         }
-        else {
+    }
+
+    public void paintingOn() {
+        if (!isPainting) {
             isPainting = true;
         }
     }
@@ -255,7 +424,7 @@ public class MapsActivity extends FragmentActivity {
     //endregion
 
     //region Color Picker Functions
-    public void onShowColorPickerClicked(View view) {
+    public void onInkwellClicked(View view) {
         //The color picker menu item as been clicked. Show
         //a dialog using the custom ColorPickerDialog class.
 
@@ -268,25 +437,23 @@ public class MapsActivity extends FragmentActivity {
 
         final ColorPickerDialog colorDialog = new ColorPickerDialog(this, initialValue);
 
-        colorDialog.setAlphaSliderVisible(true);
-        colorDialog.setTitle("Pick a Color!");
+        //colorDialog.setAlphaSliderVisible(true);
+        colorDialog.setTitle("Pick a Color");
 
         colorDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(android.R.string.ok), new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(MapsActivity.this, "Selected Color: " + colorToHexString(colorDialog.getColor()), Toast.LENGTH_LONG).show();
-
                 //Save the value in our preferences.
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putInt("color_2", colorDialog.getColor());
                 editor.commit();
                 painting.setColor(colorDialog.getColor());
+                findViewById(R.id.drawer_inkwell).invalidate();
             }
         });
 
         colorDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //Nothing to do here.
@@ -296,8 +463,39 @@ public class MapsActivity extends FragmentActivity {
         colorDialog.show();
     }
 
+    private int getSelectedColor() {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        return prefs.getInt("color_2", 0xFF000000);
+    }
+
     private String colorToHexString(int color) {
         return String.format("#%06X", 0xFFFFFFFF & color);
     }
     //endregion
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.d("PLAYSERVICES", "Connected");
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setInterval(1000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        fusedLocationProviderApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Toast.makeText(getBaseContext(), "Failed to connect to Google Play Services", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Toast.makeText(getBaseContext(), "Failed to connect to Google Play Services", Toast.LENGTH_LONG).show();
+    }
+
+    public void onLocationChanged(Location l) {
+        Log.e("LLEVENT", "You moved to " + l);
+        if (isPainting)
+            painting.addPointToStroke(new LatLng(l.getLatitude(), l.getLongitude()));
+        redrawPainting();
+    }
 }

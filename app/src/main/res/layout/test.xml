@@ -1,0 +1,28 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dip"
+        android:background="#EEEEEE">
+        <TextView
+            android:id="@+id/frame_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Frame your painting"
+            android:textSize="20dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="24dp" />
+        <ImageButton android:id="@+id/save_accept"
+            android:src="@drawable/checkmark"
+            android:background="@null"
+            android:layout_width="90dip"
+            android:layout_height="90dip"
+            android:scaleType="fitCenter"
+            android:cropToPadding="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="32dp" />
+    </RelativeLayout>
+</LinearLayout>
