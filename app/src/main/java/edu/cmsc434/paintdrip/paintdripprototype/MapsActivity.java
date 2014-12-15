@@ -3,7 +3,6 @@ package edu.cmsc434.paintdrip.paintdripprototype;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -48,7 +47,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import afzkl.development.colorpickerview.dialog.ColorPickerDialog;
-import edu.cmsc434.paintdrip.paintdripprototype.Paint.Painting;
+import edu.cmsc434.paintdrip.paintdripprototype.Paint.PaintingPath;
 import edu.cmsc434.paintdrip.paintdripprototype.Paint.Stroke;
 import edu.cmsc434.paintdrip.paintdripprototype.Share.ShareActivity;
 
@@ -60,10 +59,10 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     private GoogleApiClient googleApiClient;
     private FusedLocationProviderApi fusedLocationProviderApi = LocationServices.FusedLocationApi;
 
-    private Painting painting;
+    private PaintingPath painting;
     private List<Polyline> drawnPolylines;
-    private boolean isPainting = false;
 
+    private boolean isPainting = false;
     private Tool selectedTool = Tool.NONE;
     private boolean isSaving = false;
 
@@ -96,7 +95,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         SlidingUpPanelLayout saveSlider = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout_save);
         saveSlider.setPanelSlideListener(new SaveSlideListener());
 
-        painting = new Painting();
+        PaintingPathPath painting = new PaintingPathPath();
         painting.setColor(getSelectedColor());
         drawnPolylines = new LinkedList<Polyline>();
     }
@@ -404,7 +403,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         }
     }
 
-    private void redrawPainting() {
+    private void redrawPaintingPath() {
         for (Polyline line : drawnPolylines) {
             line.remove();
         }

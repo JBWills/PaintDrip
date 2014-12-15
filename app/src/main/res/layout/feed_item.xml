@@ -11,13 +11,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:layout_width="fill_parent"
+        <com.parse.ParseImageView
             android:layout_height="wrap_content"
+            android:layout_width = "fill_parent"
+            android:adjustViewBounds="true"
             android:id="@+id/painting_image"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/ex1"
-            android:adjustViewBounds="true"
             />
 
         <ImageView

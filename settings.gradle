@@ -1,2 +1,3 @@
-include ':app', ':facebook'
-include ':colorPickerView'
+include ':app', ':ParseLoginUI'
+include ':facebook'
+include ':colorPickerViewModule'
