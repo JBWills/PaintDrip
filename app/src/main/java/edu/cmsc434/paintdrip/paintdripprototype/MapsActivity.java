@@ -384,6 +384,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             minimizeTool(getViewFromTool(selectedTool));
             selectedTool = Tool.PENCIL;
             maximizeTool(view);
+            painting.setThickness(5);
             paintingOn();
         }
         else {
@@ -398,6 +399,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             minimizeTool(getViewFromTool(selectedTool));
             selectedTool = Tool.PAINTBRUSH;
             maximizeTool(view);
+            painting.setThickness(20);
             paintingOn();
         }
         else {
@@ -412,6 +414,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
             minimizeTool(getViewFromTool(selectedTool));
             selectedTool = Tool.PEN;
             maximizeTool(view);
+            painting.setThickness(10);
             paintingOn();
         }
         else {

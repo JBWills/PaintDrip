@@ -56,5 +56,15 @@ public class PaintingPath  {
         currentStroke.style.color = color;
     }
 
-
+    public void setThickness(int thickness) {
+        if (currentStroke.isValid()) {
+            LatLng lastPoint = currentStroke.path.get(currentStroke.path.size() - 1);
+            endStroke();
+            addPointToStroke(lastPoint);
+        }
+        else {
+            endStroke();
+        }
+        currentStroke.style.thickness = thickness;
+    }
 }
