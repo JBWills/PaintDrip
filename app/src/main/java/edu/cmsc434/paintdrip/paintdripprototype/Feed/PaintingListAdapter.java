@@ -123,9 +123,20 @@ public class PaintingListAdapter extends ParseQueryAdapter<Painting>  {
             rowView.setTag(viewHolder);
         }
         ViewHolder holder = (ViewHolder) rowView.getTag();
+
+        // Add and download the image
+        ParseFile imageFile = painting.getPhotoFile();
+        if (imageFile != null) {
+            ParseImageView imgFileView =  (ParseImageView) rowView.findViewById(R.id.painting_image);
+            imgFileView.setParseFile(imageFile);
+            imgFileView.loadInBackground();
+        }else {
+            System.out.println("");
+        }
+
         holder.username.setText(painting.getUsername());
         holder.likes.setText(painting.getLikesCount() + " ");
-        holder.image.setImageBitmap(painting.getImage());
+        //holder.image.setImageBitmap(painting.getImage());
         holder.description.setText(painting.getDescription());
         return rowView;
     }
