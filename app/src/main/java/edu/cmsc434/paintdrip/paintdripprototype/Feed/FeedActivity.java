@@ -46,7 +46,7 @@ public class FeedActivity extends FragmentActivity implements
 
         // show login screen
         ParseLoginBuilder builder = new ParseLoginBuilder(FeedActivity.this);
-        startActivityForResult(builder.build(), 0);
+        //startActivityForResult(builder.build(), 0);
         setContentView(R.layout.activity_feed);
 
         // Initialize the ViewPager and set an adapter
@@ -80,6 +80,22 @@ public class FeedActivity extends FragmentActivity implements
         if(actionBarTitleView != null){
             actionBarTitleView.setTypeface(font);
         }
+
+        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        tabs.setAllCaps(true);
+        tabs.setShouldExpand(true);
+        tabs.setViewPager(pager);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        /*
+        if(requestCode == 0) {
+            if(ParseUser.getCurrentUser() != null) {
+                Context context = getApplicationContext();
+                ParseManager parseManager = new ParseManager(context);
+                parseManager.uploadDummyImages();
+            }
+        }*/
     }
 
     @Override

@@ -42,12 +42,40 @@ public class ParseManager {
         }
     }
 
-    public void saveImage(final Painting painting, Bitmap img) {
+    public String saveImage(Bitmap img, String description, int defaultNumLikes) {
         ParseUser currentUser = ParseUser.getCurrentUser();
 
         if(currentUser == null) {
             System.out.println("ParseManager.java USER NOT LOGGED IN. NO CURRENT USER. COULD NOT SAVE");
-            return;
+            return null;
+        }
+
+        // convert bitmap to png and save as a ParseFile
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        img.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] imgData = stream.toByteArray();
+        final ParseFile photoFile = new ParseFile("painting.png", imgData);
+
+        try {
+            photoFile.save();
+        }catch(ParseException e) {
+            e.printStackTrace();
+        }
+        // upload the painting
+        final Painting parseUploadedPainting = new Painting(currentUser.getObjectId(),
+                currentUser.getUsername(), description, defaultNumLikes, photoFile);
+        updateUser(parseUploadedPainting);
+
+        return photoFile.getUrl();
+    }
+
+
+    public String saveImage(final Painting painting, Bitmap img) {
+        ParseUser currentUser = ParseUser.getCurrentUser();
+
+        if(currentUser == null) {
+            System.out.println("ParseManager.java USER NOT LOGGED IN. NO CURRENT USER. COULD NOT SAVE");
+            return null;
         }
 
         // convert bitmap to png and save as a ParseFile
@@ -60,6 +88,8 @@ public class ParseManager {
         final Painting parseUploadedPainting = new Painting(currentUser.getObjectId(),
                 currentUser.getUsername(), painting.description, painting.likes, photoFile);
         updateUser(parseUploadedPainting);
+
+        return photoFile.getUrl();
     }
 
     // Save the painting object and add this painting as a reference ot the user's list of paintings
