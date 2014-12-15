@@ -13,26 +13,39 @@
         android:layout_height="0dp"
         android:layout_weight="2"
         android:orientation="vertical" >
-
+        <!--
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools" android:layout_width="wrap_content"
-            android:layout_height="300dp" android:id="@+id/map"
+            android:layout_height="250dp" android:id="@+id/map"
             tools:context="edu.cmsc434.paintdrip.paintdripprototype.Share.ShareActivity"
             android:name="com.google.android.gms.maps.SupportMapFragment" />
+        -->
+        <ImageView
+            android:layout_height="250dp"
+            android:layout_width = "250dp   "
+            android:adjustViewBounds="true"
+            android:id="@+id/publish_preview_image"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ex1"
+            android:layout_marginBottom="15dp"
+            />
 
-        <TextView
-            android:id="@+id/artist"
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="artist" >
-        </TextView>
+            android:layout_gravity="center"
+            android:gravity="center">
 
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/descriptionET"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:text="description" >
-        </TextView>
+            android:hint="Add Title..."/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -48,33 +61,41 @@
             android:paddingBottom="15dp"
             android:gravity="center">
 
-            <Button
+            <ToggleButton
                 android:id="@+id/fbShareButton"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="25dp"
-                android:background="@drawable/fb" />
+                android:background="@drawable/fb"
+                android:textOff=""
+                android:textOn=""/>
 
-            <Button
+            <ToggleButton
                 android:id="@+id/tumblrShareButton"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
-                android:background="@drawable/tumblr" />
+                android:background="@drawable/tumblr"
+                android:textOff=""
+                android:textOn=""/>
 
-            <Button
+            <ToggleButton
                 android:id="@+id/twitterShareButton"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="15dp"
-                android:background="@drawable/twitter" />
+                android:background="@drawable/twitter"
+                android:textOff=""
+                android:textOn=""/>
         </LinearLayout>
 
         <Button
-            android:layout_width="match_parent"
+            android:layout_marginTop="15dp"
+            android:id="@+id/publishButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Publish to Feed" >

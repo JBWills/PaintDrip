@@ -1,7 +1,10 @@
 package edu.cmsc434.paintdrip.paintdripprototype.Share;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -9,6 +12,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ToggleButton;
 
 import com.facebook.AppEventsLogger;
 import com.facebook.UiLifecycleHelper;
@@ -18,38 +25,134 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import edu.cmsc434.paintdrip.paintdripprototype.Feed.Painting;
+import edu.cmsc434.paintdrip.paintdripprototype.ParseManager;
 import edu.cmsc434.paintdrip.paintdripprototype.R;
 
 public class ShareActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private UiLifecycleHelper uiHelper;
-    private Button fbShareButton;
+    private ToggleButton fbShareButton;
+    private Button publishButton;
+    private ParseManager parseManager;
+    private Bitmap bitmap;
+    private EditText description;
+
+    private ToggleButton tumblrShareButton, twitterShareButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
 
-        fbShareButton = (Button) findViewById(R.id.fbShareButton);
-        fbShareButton.setOnClickListener(new View.OnClickListener() {
+        parseManager = new ParseManager(getBaseContext());
+
+        loadBitmapFromFile();
+
+        ImageView imageView = (ImageView) findViewById(R.id.publish_preview_image);
+        imageView.setImageBitmap(bitmap);
+
+        fbShareButton = (ToggleButton) findViewById(R.id.fbShareButton);
+        fbShareButton.setTextOff("");
+        fbShareButton.setTextOn("");
+        fbShareButton.getBackground().setAlpha(128);
+
+
+        fbShareButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                initiateFbShare();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    fbShareButton.getBackground().setAlpha(255);
+                } else {
+                    fbShareButton.getBackground().setAlpha(128);
+                }
             }
         });
 
+        publishButton = (Button) findViewById(R.id.publishButton);
+        publishButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                publishToFeed();
+            }
+        });
+
+        tumblrShareButton = (ToggleButton) findViewById(R.id.tumblrShareButton);
+        tumblrShareButton.getBackground().setAlpha(128);
+       /* tumblrShareButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    fbShareButton.getBackground().setAlpha(255);
+                } else {
+                    fbShareButton.getBackground().setAlpha(128);
+                }
+            }
+        });*/
+
+        twitterShareButton = (ToggleButton) findViewById(R.id.twitterShareButton);
+        twitterShareButton.getBackground().setAlpha(128);
+       /* twitterShareButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    fbShareButton.getBackground().setAlpha(255);
+                } else {
+                    fbShareButton.getBackground().setAlpha(128);
+                }
+            }
+        });
+        */
+
+        description = (EditText) findViewById(R.id.descriptionET);
+
         uiHelper = new UiLifecycleHelper(this, null);
         uiHelper.onCreate(savedInstanceState);
-        setUpMapIfNeeded();
     }
 
-    private void initiateFbShare() {
+    private void loadBitmapFromFile() {
+        FileInputStream in = null;
+        try {
+            in = openFileInput("currentPainting.png");
+            bitmap = BitmapFactory.decodeStream(in);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void publishToFeed() {
+        // save an image to parse with the bitmap, a description (to be set),
+        // and a default number of likes
+        String imageURL = parseManager.saveImage(bitmap,description.getText().toString(), 0);
+
+        if(fbShareButton.isChecked()) {
+            initiateFbShare(imageURL);
+        }
+
+        this.setResult(100, null);
+        finish();
+    }
+
+    private void initiateFbShare(String imageURL) {
         // TODO Auto-generated method stub
         FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(this)
-                .setLink("https://developers.facebook.com/android")
-                .setPicture(
-                        "http://m.c.lnkd.licdn.com/mpr/mpr/p/4/005/052/10a/0e7ce98.jpg")
+                .setLink(imageURL)
+                .setPicture(imageURL)
+                .setCaption(description.getText().toString())
                 .build();
         uiHelper.trackPendingDialogCall(shareDialog.present());
     }
@@ -78,7 +181,7 @@ public class ShareActivity extends FragmentActivity {
         super.onResume();
         AppEventsLogger.activateApp(this);
         uiHelper.onResume();
-        setUpMapIfNeeded();
+        //setUpMapIfNeeded();
     }
 
     @Override

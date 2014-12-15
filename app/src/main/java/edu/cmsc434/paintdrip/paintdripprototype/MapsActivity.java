@@ -120,7 +120,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
     @Override
     protected void onResume() {
         super.onResume();
-
         setUpMapIfNeeded();
         if (googleApiClient.isConnected()) {
             LocationRequest locationRequest = LocationRequest.create();
@@ -291,7 +290,9 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
                         e.printStackTrace();
                     }
                 }
-                startActivity(new Intent(MapsActivity.this, ShareActivity.class));
+
+                startActivityForResult(new Intent(MapsActivity.this, ShareActivity.class), 69);
+
             }
         });
     }
@@ -472,6 +473,14 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         return String.format("#%06X", 0xFFFFFFFF & color);
     }
     //endregion
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (requestCode == 69 && resultCode == 100){
+            finish();
+        }
+    }
 
     @Override
     public void onConnected(Bundle bundle) {
