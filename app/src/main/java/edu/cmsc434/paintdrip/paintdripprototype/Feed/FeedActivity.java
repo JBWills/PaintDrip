@@ -54,10 +54,30 @@ public class FeedActivity extends FragmentActivity implements
         pager.setCurrentItem(0);
 
         // Bind the tabs to the ViewPager
-        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        tabs.setAllCaps(true);
-        tabs.setShouldExpand(true);
-        tabs.setViewPager(pager);
+        mPageTabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        mPageTabs.setAllCaps(true);
+        mPageTabs.setShouldExpand(true);
+        mPageTabs.setViewPager(pager);
+        mPageTabs.setIndicatorColorResource(R.color.transparent_blue);
+        mPageTabs.setIndicatorHeight(15);
+        mPageTabs.setUnderlineHeight(2);
+        mPageTabs.setDividerColorResource(R.color.white);
+        mPageTabs.setTextSize(40);
+        mPageTabs.setOnPageChangeListener(new SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                updateTabs(position);
+            }
+        });
+
+        updateTabs(0);
+
+        int actionBarTitle = Resources.getSystem().getIdentifier("action_bar_title", "id", "android");
+        TextView actionBarTitleView = (TextView) getWindow().findViewById(actionBarTitle);
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/GrandHotel-Regular.otf");
+        if(actionBarTitleView != null){
+            actionBarTitleView.setTypeface(font);
+        }
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -64,7 +64,6 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
 
     private PaintingPath painting;
     private List<Polyline> drawnPolylines;
-
     private boolean isPainting = false;
     private Tool selectedTool = Tool.NONE;
     private boolean isSaving = false;
