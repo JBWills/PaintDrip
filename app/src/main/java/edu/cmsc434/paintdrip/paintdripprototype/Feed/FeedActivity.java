@@ -6,6 +6,7 @@ import edu.cmsc434.paintdrip.paintdripprototype.ParseManager;
 import edu.cmsc434.paintdrip.paintdripprototype.R;
 import edu.cmsc434.paintdrip.paintdripprototype.Share.ShareActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;

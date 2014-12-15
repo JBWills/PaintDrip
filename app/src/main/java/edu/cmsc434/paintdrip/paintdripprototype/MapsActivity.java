@@ -3,6 +3,7 @@ package edu.cmsc434.paintdrip.paintdripprototype;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -95,7 +96,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         SlidingUpPanelLayout saveSlider = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout_save);
         saveSlider.setPanelSlideListener(new SaveSlideListener());
 
-        PaintingPathPath painting = new PaintingPathPath();
+        painting = new PaintingPath();
         painting.setColor(getSelectedColor());
         drawnPolylines = new LinkedList<Polyline>();
     }
@@ -403,7 +404,7 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         }
     }
 
-    private void redrawPaintingPath() {
+    private void redrawPainting() {
         for (Polyline line : drawnPolylines) {
             line.remove();
         }
