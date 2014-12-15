@@ -13,69 +13,80 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parse.CountCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseImageView;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter;
+import com.parse.ParseUser;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import edu.cmsc434.paintdrip.paintdripprototype.R;
 
-/**
- * Created by jamesbwills on 12/12/14.
- */
-public class PaintingListAdapter extends BaseAdapter {
-
+public class PaintingListAdapter extends ParseQueryAdapter<Painting>  {
+    private static final int FRIENDS_FRAGMENT = 0;
+    private static final int GLOBAL_FRAGMENT = 1;
+    private static final int ME_FRAGMENT = 2;
     List<Painting> mItems;
     Context mContext;
 
     static class ViewHolder {
         public TextView username;
         public TextView likes;
-        public ImageView image;
         public ImageView heartImage;
         public ImageView heartImage2;
         public TextView description;
+        public ParseImageView image;
     }
 
-    public PaintingListAdapter(Context c) {
+    public PaintingListAdapter(Context context) {
+
+        super(context, new ParseQueryAdapter.QueryFactory<Painting>() {
+            public ParseQuery<Painting> create() {
+                ParseQuery query = new ParseQuery("Painting");
+
+                return query;
+            }
+        });
+
         mItems = new ArrayList<Painting>();
-        mContext = c;
+        mContext = context;
     }
 
+    public PaintingListAdapter(Context context, final int feedID) {
+
+        super(context, new ParseQueryAdapter.QueryFactory<Painting>() {
+            public ParseQuery<Painting> create() {
+                ParseQuery query = new ParseQuery("Painting");
+                if(feedID == ME_FRAGMENT) {
+                    query.whereEqualTo("authorId", ParseUser.getCurrentUser().getObjectId());
+                    query.orderByDescending("createdAt");
+                    return query;
+                }else {
+                    query.orderByDescending("createdAt");
+                    return query;
+                }
+            }
+        });
+
+        mItems = new ArrayList<Painting>();
+        mContext = context;
+    }
+
+    // Customize the layout by overriding getItemView
     @Override
-    public int getCount() {
-        return mItems.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mItems.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public void addItem(Painting painting) {
-        mItems.add(painting);
-    }
-
-    public void setList(List<Painting> paintings) {
-        mItems.clear();
-        for (Painting f : paintings) {
-            mItems.add(f);
-        }
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getItemView(Painting painting, View rowView, ViewGroup parent) {
         // reuse views
-        if (convertView == null) {
+        if (rowView == null) {
             Log.i("JB", "Creating View");
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            final View rowView = inflater.inflate(R.layout.feed_item, parent, false);
-
+            rowView = inflater.inflate(R.layout.feed_item, parent, false);
             final ViewHolder viewHolder = new ViewHolder();
-
             View.OnClickListener likesClickedListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -83,21 +94,16 @@ public class PaintingListAdapter extends BaseAdapter {
                     animateLike(viewHolder.heartImage2);
                 }
             };
-
             viewHolder.heartImage = (ImageView) rowView.findViewById(R.id.heart_image);
             viewHolder.heartImage.setOnClickListener(likesClickedListener);
-
             viewHolder.likes = (TextView) rowView.findViewById(R.id.likes_text);
             viewHolder.likes.setOnClickListener(likesClickedListener);
-
             viewHolder.username = (TextView) rowView.findViewById(R.id.username_view);
             viewHolder.description = (TextView) rowView.findViewById(R.id.description_view);
-
             viewHolder.heartImage2 = (ImageView) rowView.findViewById(R.id.heart_in_painting);
             viewHolder.heartImage2.setVisibility(View.INVISIBLE);
             viewHolder.heartImage2.clearAnimation();
-
-            viewHolder.image = (ImageView) rowView.findViewById(R.id.painting_image);
+            viewHolder.image = (ParseImageView) rowView.findViewById(R.id.painting_image);
             viewHolder.image.setOnClickListener(new View.OnClickListener() {
                 boolean clicked = false;
                 long lastClickedTime = -1;
@@ -107,7 +113,6 @@ public class PaintingListAdapter extends BaseAdapter {
                     long time = System.currentTimeMillis();
                     if (clicked && time - lastClickedTime < 300) {
                         clicked = false;
-
                         animateLike(viewHolder.heartImage2);
                     } else {
                         clicked = true;
@@ -115,22 +120,14 @@ public class PaintingListAdapter extends BaseAdapter {
                     }
                 }
             });
-
             rowView.setTag(viewHolder);
-
-            convertView = rowView;
         }
-
-        Log.i("JB", "Getting view at " + position);
-        Painting painting = (Painting) getItem(position);
-        ViewHolder holder = (ViewHolder) convertView.getTag();
-
+        ViewHolder holder = (ViewHolder) rowView.getTag();
         holder.username.setText(painting.getUsername());
-        holder.likes.setText(painting.getLikes() + " ");
+        holder.likes.setText(painting.getLikesCount() + " ");
         holder.image.setImageBitmap(painting.getImage());
         holder.description.setText(painting.getDescription());
-
-        return convertView;
+        return rowView;
     }
 
     private void animateLike(ImageView heart) {

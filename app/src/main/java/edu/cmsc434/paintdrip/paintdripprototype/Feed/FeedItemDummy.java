@@ -64,6 +64,10 @@ public class FeedItemDummy {
         BITMAPS[2] = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ex3);
         BITMAPS[3] = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ex4);
         BITMAPS[4] = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ex5);
+
+        for(int i = 0; i < 5; i++) {
+            System.out.println("In FeedItemDummy, BITMAP[" +i + "]  h: " + BITMAPS[i].getHeight() + " w:" + BITMAPS[i].getWidth());
+        }
     }
 
     public List<Painting> getGlobalOrFeedItems(int size) {
@@ -101,7 +105,7 @@ public class FeedItemDummy {
 
     private Painting getRandomUser(String name) {
         Painting item = getRandomUser();
-        item.setUsername(name);
+        //item.setUsername(name);
         return item;
     }
 }

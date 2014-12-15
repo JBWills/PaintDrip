@@ -1,9 +1,12 @@
 package edu.cmsc434.paintdrip.paintdripprototype.Feed;
 
 import edu.cmsc434.paintdrip.paintdripprototype.MapsActivity;
+import edu.cmsc434.paintdrip.paintdripprototype.Paint.*;
+import edu.cmsc434.paintdrip.paintdripprototype.ParseManager;
 import edu.cmsc434.paintdrip.paintdripprototype.R;
 import edu.cmsc434.paintdrip.paintdripprototype.Share.ShareActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
@@ -21,6 +24,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.parse.Parse;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+import com.parse.ui.ParseLoginBuilder;
 
 
 public class FeedActivity extends FragmentActivity implements
@@ -31,6 +38,14 @@ public class FeedActivity extends FragmentActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // intialize Parse
+        ParseObject.registerSubclass(Painting.class);
+        Parse.initialize(this, "0JR6ZeP19ikuzEW4gGtQrNu8B1m5jukmjNZFwigF", "pX0frOadB8eHXmZignS2p7WOgTfOlKSHPHfWAjlN");
+
+        // show login screen
+        ParseLoginBuilder builder = new ParseLoginBuilder(FeedActivity.this);
+        startActivityForResult(builder.build(), 0);
         setContentView(R.layout.activity_feed);
 
         // Initialize the ViewPager and set an adapter
@@ -39,26 +54,25 @@ public class FeedActivity extends FragmentActivity implements
         pager.setCurrentItem(0);
 
         // Bind the tabs to the ViewPager
-        mPageTabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        mPageTabs.setAllCaps(true);
-        mPageTabs.setShouldExpand(true);
-        mPageTabs.setViewPager(pager);
-        mPageTabs.setIndicatorColorResource(R.color.transparent_blue);
-        mPageTabs.setOnPageChangeListener(new SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                updateTabs(position);
+        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        tabs.setAllCaps(true);
+        tabs.setShouldExpand(true);
+        tabs.setViewPager(pager);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == 0) {
+            if(ParseUser.getCurrentUser() != null) {
+                Context context = getApplicationContext();
+                ParseManager parseManager = new ParseManager(context);
+                parseManager.uploadDummyImages();
             }
-        });
-
-        updateTabs(0);
-
-        int actionBarTitle = Resources.getSystem().getIdentifier("action_bar_title", "id", "android");
-        TextView actionBarTitleView = (TextView) getWindow().findViewById(actionBarTitle);
-        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/GrandHotel-Regular.otf");
-        if(actionBarTitleView != null){
-            actionBarTitleView.setTypeface(font);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     private void updateTabs(int position) {

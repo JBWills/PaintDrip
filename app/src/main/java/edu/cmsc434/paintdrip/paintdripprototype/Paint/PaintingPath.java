@@ -5,6 +5,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -12,11 +15,11 @@ import java.util.List;
 /**
  * Created by evan on 12/1/14.
  */
-public class Painting {
+public class PaintingPath  {
     private List<Stroke> strokes;
     private Stroke currentStroke;
 
-    public Painting() {
+    public PaintingPath() {
         strokes = new LinkedList<Stroke>();
         currentStroke = new Stroke();
     }
@@ -52,4 +55,6 @@ public class Painting {
         }
         currentStroke.style.color = color;
     }
+
+
 }
