@@ -53,17 +53,9 @@ public class PaintingListFragment extends Fragment implements AbsListView.OnItem
             feedID = getArguments().getInt(ARG_ID);
         }
 
-        mAdapter = new PaintingListAdapter(getActivity().getApplicationContext());
-
         FeedItemDummy f = new FeedItemDummy(getActivity().getApplicationContext());
 
-        if (feedID == FRIENDS_FRAGMENT) {
-            mAdapter.setList(f.getGlobalOrFeedItems(30));
-        } else if (feedID == GLOBAL_FRAGMENT) {
-            mAdapter.setList(f.getGlobalOrFeedItems(30));
-        } else if (feedID == ME_FRAGMENT) {
-            mAdapter.setList(f.getMeItems(30));
-        }
+        mAdapter = new PaintingListAdapter(getActivity().getApplicationContext(), feedID);
     }
 
     @Override
