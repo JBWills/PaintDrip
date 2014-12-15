@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -26,6 +27,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -101,6 +103,13 @@ public class MapsActivity extends FragmentActivity implements GoogleApiClient.Co
         painting = new PaintingPath();
         painting.setColor(getSelectedColor());
         drawnPolylines = new LinkedList<Polyline>();
+
+        int actionBarTitle = Resources.getSystem().getIdentifier("action_bar_title", "id", "android");
+        TextView actionBarTitleView = (TextView) getWindow().findViewById(actionBarTitle);
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/GrandHotel-Regular.otf");
+        if(actionBarTitleView != null){
+            actionBarTitleView.setTypeface(font);
+        }
     }
 
     @Override

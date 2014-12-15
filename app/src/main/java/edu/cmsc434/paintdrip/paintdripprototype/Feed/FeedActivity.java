@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
@@ -59,10 +60,11 @@ public class FeedActivity extends FragmentActivity implements
         mPageTabs.setShouldExpand(true);
         mPageTabs.setViewPager(pager);
         mPageTabs.setIndicatorColorResource(R.color.transparent_blue);
-        mPageTabs.setIndicatorHeight(15);
-        mPageTabs.setUnderlineHeight(2);
+        Resources r = getResources();
+        mPageTabs.setIndicatorHeight((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4.5f, r.getDisplayMetrics()));
+        mPageTabs.setUnderlineHeight((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, r.getDisplayMetrics()));
         mPageTabs.setDividerColorResource(R.color.white);
-        mPageTabs.setTextSize(40);
+        mPageTabs.setTextSize((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 13.5f, r.getDisplayMetrics()));
         mPageTabs.setOnPageChangeListener(new SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
