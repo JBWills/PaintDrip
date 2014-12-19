@@ -12,6 +12,9 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import edu.cmsc434.paintdrip.paintdripprototype.R;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * A fragment representing a list of FeedItems.
@@ -29,6 +32,7 @@ public class PaintingListFragment extends Fragment implements AbsListView.OnItem
     private OnFragmentInteractionListener mListener;
     private AbsListView mListView;
     private PaintingListAdapter mAdapter;
+    private PullToRefreshLayout mPullToRefreshLayout;
 
     public static PaintingListFragment newInstance(int feedID) {
         PaintingListFragment fragment = new PaintingListFragment();
@@ -70,7 +74,29 @@ public class PaintingListFragment extends Fragment implements AbsListView.OnItem
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
 
+        mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
+
+        // Now setup the PullToRefreshLayout
+        ActionBarPullToRefresh.from(getActivity())
+                // Mark All Children as pullable
+                .allChildrenArePullable()
+                        // Set a OnRefreshListener
+                .listener(new OnRefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        refresh();
+                    }
+                }).setup(mPullToRefreshLayout);
+
+        refresh();
         return view;
+    }
+
+    public void refresh() {
+        if(mAdapter != null) {
+            mAdapter.loadObjects();
+            mPullToRefreshLayout.setRefreshComplete();
+        }
     }
 
     @Override

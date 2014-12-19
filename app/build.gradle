@@ -31,6 +31,7 @@ dependencies {
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile 'com.android.support:appcompat-v7:21.+'
     compile 'com.parse.bolts:bolts-android:1.1.2'
+    compile 'com.github.chrisbanes.actionbarpulltorefresh:library:+'
     //provided fileTree(dir: 'libs', include: 'Parse-*.jar')
     compile 'com.parse.bolts:bolts-android:1.1.4'
     //compile files('libs/Parse-1.8.0/Parse-1.8.0.jar')

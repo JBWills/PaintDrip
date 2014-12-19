@@ -44,9 +44,12 @@ public class FeedActivity extends FragmentActivity implements
         ParseObject.registerSubclass(Painting.class);
         Parse.initialize(this, "0JR6ZeP19ikuzEW4gGtQrNu8B1m5jukmjNZFwigF", "pX0frOadB8eHXmZignS2p7WOgTfOlKSHPHfWAjlN");
 
-        // show login screen
-        ParseLoginBuilder builder = new ParseLoginBuilder(FeedActivity.this);
-        //startActivityForResult(builder.build(), 0);
+        if (ParseUser.getCurrentUser() == null) {
+            // show login screen
+            ParseLoginBuilder builder = new ParseLoginBuilder(FeedActivity.this);
+            startActivityForResult(builder.build(), 0);
+        }
+
         setContentView(R.layout.activity_feed);
 
         // Initialize the ViewPager and set an adapter
@@ -72,7 +75,6 @@ public class FeedActivity extends FragmentActivity implements
             }
         });
 
-        updateTabs(0);
 
         int actionBarTitle = Resources.getSystem().getIdentifier("action_bar_title", "id", "android");
         TextView actionBarTitleView = (TextView) getWindow().findViewById(actionBarTitle);
@@ -85,6 +87,7 @@ public class FeedActivity extends FragmentActivity implements
         tabs.setAllCaps(true);
         tabs.setShouldExpand(true);
         tabs.setViewPager(pager);
+        updateTabs(0);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -121,6 +121,7 @@ public class PaintingListAdapter extends ParseQueryAdapter<Painting>  {
         ParseFile imageFile = painting.getPhotoFile();
         if (imageFile != null) {
             ParseImageView imgFileView =  (ParseImageView) rowView.findViewById(R.id.painting_image);
+            imgFileView.setMinimumHeight(mContext.getResources().getDisplayMetrics().widthPixels);
             imgFileView.setParseFile(imageFile);
             imgFileView.loadInBackground();
         }else {
