@@ -21,4 +21,15 @@
     <string name="title_activity_share">Share</string>
     <string name="hello_world">Hello world!</string>
 
+    <string-array name="dialog_your_drawing">
+        <item>Share</item>
+        <item>Edit</item>
+        <item>Delete Painting</item>
+    </string-array>
+
+    <string-array name="dialog_other_drawing">
+        <item>Share</item>
+        <item>Report Inappropriate</item>
+    </string-array>
+
 </resources>

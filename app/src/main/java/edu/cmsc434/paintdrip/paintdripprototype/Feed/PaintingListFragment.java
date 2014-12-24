@@ -21,9 +21,9 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
  */
 public class PaintingListFragment extends Fragment implements AbsListView.OnItemClickListener {
 
-    private static final int FRIENDS_FRAGMENT = 0;
-    private static final int GLOBAL_FRAGMENT = 1;
-    private static final int ME_FRAGMENT = 2;
+    public static final int FRIENDS_FRAGMENT = 0;
+    public static final int GLOBAL_FRAGMENT = 1;
+    public static final int ME_FRAGMENT = 2;
 
     private static final String ARG_ID = "id";
 
@@ -49,6 +49,12 @@ public class PaintingListFragment extends Fragment implements AbsListView.OnItem
     public PaintingListFragment() {
     }
 
+    public void scrollToTop() {
+        if (mListView != null) {
+            mListView.setSelection(0);
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +65,7 @@ public class PaintingListFragment extends Fragment implements AbsListView.OnItem
 
         FeedItemDummy f = new FeedItemDummy(getActivity().getApplicationContext());
 
-        mAdapter = new PaintingListAdapter(getActivity().getApplicationContext(), feedID);
+        mAdapter = new PaintingListAdapter(getActivity().getApplicationContext(), feedID, (FeedActivity) getActivity());
     }
 
     @Override

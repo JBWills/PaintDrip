@@ -1,12 +1,11 @@
 package edu.cmsc434.paintdrip.paintdripprototype.Feed;
 
 import edu.cmsc434.paintdrip.paintdripprototype.MapsActivity;
-import edu.cmsc434.paintdrip.paintdripprototype.Paint.*;
 import edu.cmsc434.paintdrip.paintdripprototype.ParseManager;
 import edu.cmsc434.paintdrip.paintdripprototype.R;
-import edu.cmsc434.paintdrip.paintdripprototype.Share.ShareActivity;
 
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
@@ -30,11 +29,12 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.ui.ParseLoginBuilder;
 
-
 public class FeedActivity extends FragmentActivity implements
-        PaintingListFragment.OnFragmentInteractionListener {
+        PaintingListFragment.OnFragmentInteractionListener, FeedItemListener {
 
     private PagerSlidingTabStrip mPageTabs;
+    private MyPagerAdapter mPageAdapter;
+    private PagerSlidingTabStrip mTabs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +52,10 @@ public class FeedActivity extends FragmentActivity implements
 
         setContentView(R.layout.activity_feed);
 
+        mPageAdapter = new MyPagerAdapter(getSupportFragmentManager());
         // Initialize the ViewPager and set an adapter
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+        pager.setAdapter(mPageAdapter);
         pager.setCurrentItem(0);
 
         // Bind the tabs to the ViewPager
@@ -72,6 +73,7 @@ public class FeedActivity extends FragmentActivity implements
             @Override
             public void onPageSelected(int position) {
                 updateTabs(position);
+                mPageAdapter.setCurrentPage(position);
             }
         });
 
@@ -83,10 +85,11 @@ public class FeedActivity extends FragmentActivity implements
             actionBarTitleView.setTypeface(font);
         }
 
-        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        tabs.setAllCaps(true);
-        tabs.setShouldExpand(true);
-        tabs.setViewPager(pager);
+        mTabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        mTabs.setAllCaps(true);
+        mTabs.setShouldExpand(true);
+        mTabs.setViewPager(pager);
+
         updateTabs(0);
     }
 
@@ -121,6 +124,9 @@ public class FeedActivity extends FragmentActivity implements
     @Override
     public void onResume(){
         super.onResume();
+
+        mPageAdapter.updateFeed();
+        mPageAdapter.scrollToTop();
     }
 
     @Override
@@ -147,22 +153,68 @@ public class FeedActivity extends FragmentActivity implements
 
     }
 
+    public void updatePaintings() {
+        Log.i("JB", "Updating tabs");
+        mPageAdapter.updateFeed();
+    }
+
+    public void menuClicked(final Painting painting) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(FeedActivity.this);
+
+        final String[] items = getApplicationContext().getResources()
+                .getStringArray(R.array.dialog_your_drawing);
+
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0) {
+                    // TODO add share functionality
+                } else if (which == 1) {
+                    // TODO add edit functionality
+                } else if (which == 2) {
+                    // TODO add confirmation dialog
+                    new ParseManager(getBaseContext()).deletePainting(painting, FeedActivity.this);
+                }
+            }
+        }).show();
+    }
+
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
         private final String[] TITLES = new String[3];
 
+        int mCurrentPage = -1;
+
+        PaintingListFragment[] mFragments;
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
             Log.i("JB", "Creating PagerAdapter");
 
-            TITLES[0] = getApplicationContext().getString(R.string.tab_title_friends);
-            TITLES[1] = getApplicationContext().getString(R.string.tab_title_global);
-            TITLES[2] = getApplicationContext().getString(R.string.tab_title_me);
+            TITLES[0] = "FRIENDS";
+            TITLES[1] = "GLOBAL";
+            TITLES[2] = "ME";
+
+            mCurrentPage = 0;
+
+            mFragments = new PaintingListFragment[3];
+            mFragments[0] = PaintingListFragment.newInstance(PaintingListFragment.FRIENDS_FRAGMENT);
+            mFragments[1] = PaintingListFragment.newInstance(PaintingListFragment.GLOBAL_FRAGMENT);
+            mFragments[2] = PaintingListFragment.newInstance(PaintingListFragment.ME_FRAGMENT);
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             return TITLES[position];
+        }
+
+        public void updateFeed() {
+            for (int i = 0; i < mFragments.length; i++) {
+                mFragments[i].refresh();
+            }
+        }
+
+        public void scrollToTop() {
+            mFragments[mCurrentPage].scrollToTop();
         }
 
         @Override
@@ -173,8 +225,11 @@ public class FeedActivity extends FragmentActivity implements
         @Override
         public Fragment getItem(int position) {
             Log.i("JB", "Getting fragment");
-            return PaintingListFragment.newInstance(position);
+            return mFragments[position];
         }
 
+        public void setCurrentPage(int position) {
+            mCurrentPage = position;
+        }
     }
 }

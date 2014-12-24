@@ -1,6 +1,8 @@
 package edu.cmsc434.paintdrip.paintdripprototype.Feed;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,22 +38,9 @@ public class PaintingListAdapter extends ParseQueryAdapter<Painting>  {
     private static final int ME_FRAGMENT = 2;
     List<Painting> mItems;
     Context mContext;
+    FeedItemListener mListener;
 
-    public PaintingListAdapter(Context context) {
-
-        super(context, new ParseQueryAdapter.QueryFactory<Painting>() {
-            public ParseQuery<Painting> create() {
-                ParseQuery query = new ParseQuery("Painting");
-
-                return query;
-            }
-        });
-
-        mItems = new ArrayList<Painting>();
-        mContext = context;
-    }
-
-    public PaintingListAdapter(Context context, final int feedID) {
+    public PaintingListAdapter(Context context, final int feedID, FeedItemListener listener) {
 
         super(context, new ParseQueryAdapter.QueryFactory<Painting>() {
             public ParseQuery<Painting> create() {
@@ -69,6 +58,9 @@ public class PaintingListAdapter extends ParseQueryAdapter<Painting>  {
 
         mItems = new ArrayList<Painting>();
         mContext = context;
+        mListener = listener;
+
+        setPaginationEnabled(false);
     }
 
     // Customize the layout by overriding getItemView
@@ -81,12 +73,19 @@ public class PaintingListAdapter extends ParseQueryAdapter<Painting>  {
         View.OnClickListener likesClickedListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("JB", "Clicked likes");
-                togglePaintingLike(painting, row);
+                togglePaintingLike(painting, row, false);
             }
         };
         ImageView heartImage = (ImageView) rowView.findViewById(R.id.heart_image);
         heartImage.setOnClickListener(likesClickedListener);
+
+        ImageView menuImage = (ImageView) rowView.findViewById(R.id.feed_item_menu);
+        menuImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.menuClicked(painting);
+            }
+        });
 
         TextView likesView = (TextView) rowView.findViewById(R.id.likes_text);
         likesView.setOnClickListener(likesClickedListener);
@@ -109,7 +108,7 @@ public class PaintingListAdapter extends ParseQueryAdapter<Painting>  {
                 long time = System.currentTimeMillis();
                 if (clicked && time - lastClickedTime < 300) {
                     clicked = false;
-                    togglePaintingLike(painting, row);
+                    togglePaintingLike(painting, row, true);
                 } else {
                     clicked = true;
                     lastClickedTime = time;
@@ -134,25 +133,35 @@ public class PaintingListAdapter extends ParseQueryAdapter<Painting>  {
             heartImage.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.heart_deselected));
         }
 
+        if (ParseUser.getCurrentUser() != null && ParseUser.getCurrentUser().getUsername().equals(painting.getUsername())) {
+            menuImage.setVisibility(View.VISIBLE);
+        } else {
+            menuImage.setVisibility(View.INVISIBLE);
+        }
+
         username.setText(painting.getUsername());
         likesView.setText(painting.getLikesCount() + " ");
-        //holder.image.setImageBitmap(painting.getImage());
         description.setText(painting.getDescription());
 
         return rowView;
     }
 
-    private void togglePaintingLike(final Painting p, final View rowView) {
+    private void togglePaintingLike(final Painting p, final View rowView, boolean forceLiked) {
         ImageView heartView1 = (ImageView) rowView.findViewById(R.id.heart_image);
         final TextView likesView = (TextView) rowView.findViewById(R.id.likes_text);
-        if (p.isLiked()) {
-            p.unlikePainting();
-            heartView1.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.heart_deselected));
-        } else {
+
+        if (!p.isLiked()) {
             ImageView heartView2 = (ImageView) rowView.findViewById(R.id.heart_in_painting);
             p.likePainting();
             animateLike(heartView2);
             heartView1.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.heart_selected));
+        } else if (forceLiked) {
+            ImageView heartView2 = (ImageView) rowView.findViewById(R.id.heart_in_painting);
+            animateLike(heartView2);
+            heartView1.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.heart_selected));
+        } else {
+            p.unlikePainting();
+            heartView1.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.heart_deselected));
         }
 
         p.saveInBackground(new SaveCallback() {

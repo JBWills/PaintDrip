@@ -3,8 +3,10 @@ package edu.cmsc434.paintdrip.paintdripprototype;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.parse.DeleteCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -18,7 +20,9 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.cmsc434.paintdrip.paintdripprototype.Feed.FeedActivity;
 import edu.cmsc434.paintdrip.paintdripprototype.Feed.FeedItemDummy;
+import edu.cmsc434.paintdrip.paintdripprototype.Feed.FeedItemListener;
 import edu.cmsc434.paintdrip.paintdripprototype.Feed.Painting;
 
 /**
@@ -40,6 +44,22 @@ public class ParseManager {
         for(Painting p : paintings) {
             saveImage(p, p.image);
         }
+    }
+
+    public boolean deletePainting(Painting p, final FeedItemListener listener) {
+        if (p == null || !p.getUsername().equals(ParseUser.getCurrentUser().getUsername())) {
+            return false;
+        }
+
+        p.deleteInBackground(new DeleteCallback() {
+            @Override
+            public void done(ParseException e) {
+                Log.i("JB", "Delete Finished");
+                listener.updatePaintings();
+            }
+        });
+
+        return true;
     }
 
     public String saveImage(Bitmap img, String description, int defaultNumLikes) {
@@ -68,7 +88,6 @@ public class ParseManager {
 
         return photoFile.getUrl();
     }
-
 
     public String saveImage(final Painting painting, Bitmap img) {
         ParseUser currentUser = ParseUser.getCurrentUser();
@@ -105,6 +124,11 @@ public class ParseManager {
         }
 
         user.put("paintings", list);
-        user.saveInBackground();
+        user.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+
+            }
+        });
     }
 }
