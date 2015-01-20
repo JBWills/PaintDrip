@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "edu.cmsc434.paintdrip.paintdripprototype"
-        minSdkVersion 18
+        minSdkVersion 17
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -32,7 +32,6 @@ dependencies {
     compile 'com.parse.bolts:bolts-android:1.1.2'
     compile 'com.github.chrisbanes.actionbarpulltorefresh:library:+'
     compile 'com.parse.bolts:bolts-android:1.1.4'
-
     compile project(':colorPickerView')
     compile project(':facebook')
     compile project(':ParseLoginUI')

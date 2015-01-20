@@ -52,13 +52,13 @@ public class FeedActivity extends FragmentActivity implements
 
         setContentView(R.layout.activity_feed);
 
-        mPageAdapter = new MyPagerAdapter(getSupportFragmentManager());
         // Initialize the ViewPager and set an adapter
+        mPageAdapter = new MyPagerAdapter(getSupportFragmentManager());
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(mPageAdapter);
         pager.setCurrentItem(0);
 
-        // Bind the tabs to the ViewPager
+        // bind tabs to the ViewPager
         mPageTabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         mPageTabs.setAllCaps(true);
         mPageTabs.setShouldExpand(true);
@@ -78,30 +78,15 @@ public class FeedActivity extends FragmentActivity implements
         });
 
 
+        // set the actionbar title font
         int actionBarTitle = Resources.getSystem().getIdentifier("action_bar_title", "id", "android");
         TextView actionBarTitleView = (TextView) getWindow().findViewById(actionBarTitle);
-        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/GrandHotel-Regular.otf");
-        if(actionBarTitleView != null){
+        if (actionBarTitleView != null){
+            Typeface font = Typeface.createFromAsset(getAssets(), "fonts/GrandHotel-Regular.otf");
             actionBarTitleView.setTypeface(font);
         }
 
-        mTabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        mTabs.setAllCaps(true);
-        mTabs.setShouldExpand(true);
-        mTabs.setViewPager(pager);
-
         updateTabs(0);
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        /*
-        if(requestCode == 0) {
-            if(ParseUser.getCurrentUser() != null) {
-                Context context = getApplicationContext();
-                ParseManager parseManager = new ParseManager(context);
-                parseManager.uploadDummyImages();
-            }
-        }*/
     }
 
     @Override
