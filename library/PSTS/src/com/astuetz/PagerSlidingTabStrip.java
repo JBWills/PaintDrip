@@ -48,7 +48,17 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 	public interface IconTabProvider {
 		public int getPageIconResId(int position);
 	}
+	
+	public interface TabListener {
+		public void onTabReselected(View tab, int position);
+	}
 
+	public void setOnTabListener(TabListener listener) {
+		mListener = listener;
+	}
+	
+	private TabListener mListener;
+	
 	// @formatter:off
 	private static final int[] ATTRS = new int[] {
 		android.R.attr.textSize,
@@ -248,7 +258,12 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 		tab.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				pager.setCurrentItem(position);
+				if (position == currentPosition && mListener !=null) {
+					// reselected tab
+					mListener.onTabReselected(v, position);
+				} else {
+					pager.setCurrentItem(position);
+				}
 			}
 		});
 

@@ -23,11 +23,10 @@ dependencies {
     repositories {
         mavenCentral()
     }
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.google.android.gms:play-services:6.1.71'
     compile 'com.android.support:support-v4:21.+'
     compile 'com.sothree.slidinguppanel:library:+'
-    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile 'com.android.support:appcompat-v7:21.+'
     compile 'com.parse.bolts:bolts-android:1.1.2'
     compile 'com.github.chrisbanes.actionbarpulltorefresh:library:+'
@@ -35,4 +34,5 @@ dependencies {
     compile project(':colorPickerView')
     compile project(':facebook')
     compile project(':ParseLoginUI')
+    compile project(':library:PSTS')
 }

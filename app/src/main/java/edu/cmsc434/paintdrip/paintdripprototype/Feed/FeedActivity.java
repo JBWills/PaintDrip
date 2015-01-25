@@ -4,6 +4,7 @@ import edu.cmsc434.paintdrip.paintdripprototype.MapsActivity;
 import edu.cmsc434.paintdrip.paintdripprototype.ParseManager;
 import edu.cmsc434.paintdrip.paintdripprototype.R;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -77,6 +79,12 @@ public class FeedActivity extends FragmentActivity implements
             }
         });
 
+        mPageTabs.setOnTabListener(new PagerSlidingTabStrip.TabListener() {
+            @Override
+            public void onTabReselected(View tab, int position) {
+                mPageAdapter.scrollToTop();
+            }
+        });
 
         // set the actionbar title font
         int actionBarTitle = Resources.getSystem().getIdentifier("action_bar_title", "id", "android");
@@ -171,6 +179,7 @@ public class FeedActivity extends FragmentActivity implements
         int mCurrentPage = -1;
 
         PaintingListFragment[] mFragments;
+
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
             Log.i("JB", "Creating PagerAdapter");
@@ -215,6 +224,10 @@ public class FeedActivity extends FragmentActivity implements
 
         public void setCurrentPage(int position) {
             mCurrentPage = position;
+        }
+
+        public int getCurrentPage() {
+            return mCurrentPage;
         }
     }
 }
